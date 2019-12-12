@@ -18,7 +18,8 @@ static gchar *log_file = NULL;
 static glong rotation_size = 104857600;
 static glong rotation_time = 86400;
 static gchar *rotation_suffix = ".%Y%m%d%H%M%S";
-static gchar *rm_file_at_exit = NULL;
+static gboolean rm_fifo_at_exit = FALSE;
+static gchar *fifo = NULL;
 static gint rotated_files = 5;
 struct sigaction sigact;
 static gboolean use_locks = FALSE;
@@ -29,7 +30,8 @@ static GOptionEntry entries[] = {
     { "rotation-suffix", 'S', 0, G_OPTION_ARG_STRING, &rotation_suffix, "strftime based suffix to append to rotated log files (default: .%Y%m%d%H%M%S)", NULL },
     { "rotated-files", 'n', 0, G_OPTION_ARG_INT, &rotated_files, "maximum number of rotated files to keep including main one (0 => no cleaning, default: 5)", NULL },
     { "use-locks", 'm', 0, G_OPTION_ARG_NONE, &use_locks, "use locks to append to main log file (useful if several process writes to the same file)", NULL },
-    { "rm-file-at-exit", 'r', 0, G_OPTION_ARG_STRING, &rm_file_at_exit, "full path of a file to delete at exist (can be useful for cleaning named pipes)", NULL }
+    { "fifo", 'f', 0, G_OPTION_ARG_STRING, &fifo, "if set, read lines on this fifo instead of stdin", NULL },
+    { "rm-fifo-at-exit", 'r', 0, G_OPTION_ARG_NONE, &rm_fifo_at_exit, "if set, drop fifo at then end of the program (you have to use --fifo option of course)", NULL }
 };
 
 gint _list_compare(gconstpointer a, gconstpointer b) {
@@ -173,8 +175,11 @@ void init_or_reinit_output_channel(const gchar *lg_file, gboolean us_locks) {
 }
 
 void exit_handler() {
-    g_assert(rm_file_at_exit != NULL);
-    g_unlink(rm_file_at_exit);
+    if (rm_fifo_at_exit == TRUE) {
+        if (fifo != NULL) {
+            g_unlink(fifo);
+        }
+    }
 }
 
 int main(int argc, char *argv[])
@@ -191,15 +196,24 @@ int main(int argc, char *argv[])
         g_print(g_option_context_get_help(context, TRUE, NULL));
         exit(1);
     }
-    if (rm_file_at_exit != NULL) {
-        atexit(exit_handler);
-    }
+    atexit(exit_handler);
     log_file = g_strdup(argv[1]);
-    init_or_reinit_output_channel(log_file, use_locks);
-    GIOChannel *in = g_io_channel_unix_new(fileno(stdin));
+    GIOChannel *in = NULL;
+    if (fifo == NULL) {
+        // We read from stdin
+        in = g_io_channel_unix_new(fileno(stdin));
+    } else {
+        GError *error = NULL;
+        in = g_io_channel_new_file(fifo, "r", &error);
+        if (in == NULL) {
+            g_critical("Can't open %s => exit", fifo);
+            return 1;
+        }
+    }
     g_io_channel_set_encoding(in, NULL, NULL);
     GIOStatus in_status = G_IO_STATUS_NORMAL;
     GString *in_buffer = g_string_new(NULL);
+    init_or_reinit_output_channel(log_file, use_locks);
     init_every_second_signal();
     while ((in_status != G_IO_STATUS_EOF) && (in_status != G_IO_STATUS_ERROR)) {
         in_status = g_io_channel_read_line_string(in, in_buffer, NULL, NULL);

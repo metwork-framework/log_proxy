@@ -30,11 +30,11 @@ It can be used to avoid loosing some logs if you use `logrotate` with `copytrunc
 ### Why not using `logrotate` with `copytruncate` feature?
 
 If you use `myapp myapp_arg1 myapp_arg2 >/log/myapp.log 2>&1`for example and if you can't stop easily your app (because it's a critical thing), you can configure `logrotate` with `copytruncate` feature to do the log rotation of `/log/myapp.log` but:
- 
+
 - you may loose a few lines during log rotation (1)
 - the rotation is mainly time-based, so you can fill your storage if your app suddently start to be very very verbose
 
-(1), see https://unix.stackexchange.com/questions/475524/how-copytruncate-actually-works 
+(1), see https://unix.stackexchange.com/questions/475524/how-copytruncate-actually-works
 
 > Please note also that copyrotate has an inherent race condition, in that it's possible that the writer will append a line to the logfile just after logrotate finished the copy and before it has issued the truncate operation. That race condition would cause it to lose those lines of log forever. That's why rotating logs using copytruncate is usually not recommended, unless it's the only possible way to do it.
 
@@ -46,7 +46,7 @@ But none of them was ok with our needed features:
 
 - configurable log rotation on size **AND** age
 - no dedicated log directory for an app
-- (and) several instances of the same app can log to the same log file without issue 
+- (and) several instances of the same app can log to the same log file without issue
 
 The [piper tool](https://github.com/gongled/piper) was the more close but does not support the last feature (several instances to the same log file).
 
@@ -55,7 +55,7 @@ The [piper tool](https://github.com/gongled/piper) was the more close but does n
 ```console
 $ ./log_proxy --help
 Usage:
-  log_proxy [OPTION...] LOGNAME  - log proxy
+  log_proxy [OPTION?] LOGNAME  - log proxy
 
 Help Options:
   -h, --help                Show help options
@@ -66,7 +66,8 @@ Application Options:
   -S, --rotation-suffix     strftime based suffix to append to rotated log files (default: .%Y%m%d%H%M%S)
   -n, --rotated-files       maximum number of rotated files to keep including main one (0 => no cleaning, default: 5)
   -m, --use-locks           use locks to append to main log file (useful if several process writes to the same file)
-  -r, --rm-file-at-exit     full path of a file to delete at exist (can be useful for cleaning named pipes)
+  -f, --fifo                if set, read lines on this fifo instead of stdin
+  -r, --rm-fifo-at-exit     if set, drop fifo at then end of the program (you have to use --fifo option of course)
 ```
 
 ## FIXME
