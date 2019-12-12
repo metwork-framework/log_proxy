@@ -112,16 +112,24 @@ static void every_second(int sig) {
             first_iteration = FALSE;
             clean_too_old_files();
         }
-        if (get_file_size(log_file) < 0) {
-            unlock_control_file(fd);
-            return;
-        }
         if (test_output_channel_rotated() == TRUE) {
             // another program rotated our log file
             // => let's reinit the output channel
             destroy_output_channel();
             init_output_channel(log_file, use_locks, TRUE);
             unlock_control_file(fd);
+            if (sig > 0) {
+                // if sig<0, this is the final call before program end
+                alarm(1);
+            }
+            return;
+        }
+        if (get_file_size(log_file) < 0) {
+            unlock_control_file(fd);
+            if (sig > 0) {
+                // if sig<0, this is the final call before program end
+                alarm(1);
+            }
             return;
         }
         gboolean must_rotate = FALSE;
@@ -147,7 +155,7 @@ static void every_second(int sig) {
         }
         unlock_control_file(fd);
     }
-    if (sig < 0) {
+    if (sig > 0) {
         // if sig<0, this is the final call before program end
         alarm(1);
     }
@@ -207,8 +215,7 @@ int main(int argc, char *argv[])
             while (TRUE) {
                 gboolean write_status = write_output_channel(in_buffer);
                 if (write_status == FALSE) {
-                    g_warning("error during write on: %s => sleeping 1s", log_file);
-                    sleep(1);
+                    g_warning("error during write on: %s", log_file);
                     init_or_reinit_output_channel(log_file, use_locks);
                     continue;
                 }
