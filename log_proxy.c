@@ -110,7 +110,8 @@ static void every_second(int sig) {
             }
             return;
         }
-        if (get_file_size(log_file) < 0) {
+        glong size = get_file_size(log_file);
+        if (size < 0) {
             unlock_control_file(fd);
             if (sig > 0) {
                 // if sig<0, this is the final call before program end
@@ -120,7 +121,7 @@ static void every_second(int sig) {
         }
         gboolean must_rotate = FALSE;
         if (rotation_size > 0) {
-            if (get_file_size(log_file) > rotation_size) {
+            if (size > rotation_size) {
                 must_rotate = TRUE;
             }
         }
