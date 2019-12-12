@@ -10,17 +10,17 @@ It can be used to avoid loosing some logs if you use `logrotate` with `copytrunc
 
 ## Features
 
-- [ ] usable as a pipe (`myapp myapp_arg1 myapp_arg2 |log_proxy /log/myapp.log`)
-- [ ] configurable log rotation suffix with `stftime` placeholders (for example: `.%Y%m%d%H%M%S`)
-- [ ] can limit the number of rotated files (and delete oldest)
-- [ ] can rotate files depending on their size (in bytes)
-- [ ] can rotate files depending on their age (in seconds)
-- [ ] does not need a specific log directory for a given app (you can have one directory with plenty of different log files from different apps)
-- [ ] several instances of the same app can log to the same file without issue (example: `myapp arg1 |log_proxy --use-locks /log/myapp.log` and `myapp arg2 |log_proxy --use-locks /log/myapp.log` can run at the same time)
+- [x] usable as a pipe (`myapp myapp_arg1 myapp_arg2 |log_proxy /log/myapp.log`)
+- [x] configurable log rotation suffix with `stftime` placeholders (for example: `.%Y%m%d%H%M%S`)
+- [x] can limit the number of rotated files (and delete oldest)
+- [x] can rotate files depending on their size (in bytes)
+- [x] can rotate files depending on their age (in seconds)
+- [x] does not need a specific log directory for a given app (you can have one directory with plenty of different log files from different apps)
+- [x] several instances of the same app can log to the same file without issue (example: `myapp arg1 |log_proxy --use-locks /log/myapp.log` and `myapp arg2 |log_proxy --use-locks /log/myapp.log` can run at the same time)
 - [ ] configurable action (a command to execute) to run after each log rotation
 - [ ] rock solid
-- [ ] really fast
-- [ ] do not eat a lot of memory
+- [x] really fast
+- [x] do not eat a lot of memory
 - [ ] configurable with CLI options as well with env variables
 - [ ] usable as a wrapper to capture stdout and stderr (`log_proxy_wrapper --stdout=/log/myapp.stdout --stderr=/log/myapp.stderr -- myapp myapp_arg1 myapp_arg2`)
 - [ ] usable as a wrapper to capture stdout and stderr in the same file (`log_proxy_wrapper --stdout=/log/myapp.log --stderr=STDOUT -- myapp myapp_arg1 myapp_arg2`)
