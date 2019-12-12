@@ -27,7 +27,7 @@ all: $(OBJECTS) $(BINARIES) $(LIBS)
 clean:
 	rm -f $(OBJECTS) $(BINARIES) core.* vgcore.*
 
-log_proxy: log_proxy.c $(OBJECTS)
+log_proxy: log_proxy.c $(OBJECTS) options.h
 	$(CC) $(_CFLAGS) $(_LDFLAGS) -o $@ $^
 
 control.o: control.c control.h
