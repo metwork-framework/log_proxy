@@ -121,18 +121,24 @@ gchar *compute_strftime_suffix(const gchar *str, const gchar *strftime_suffix) {
  * @return TRUE if ok, FALSE if errors.
  */
 gboolean create_empty(const gchar *file_path) {
-    int fd2 = open(file_path, O_CREAT | O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-    if (fd2 < 0) {
-        if (errno == EEXIST) {
-            return TRUE;
-        }
-        if (errno != EINTR) {
+    int fd2, close_res;
+    while (TRUE) {
+        fd2 = open(file_path, O_CREAT | O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+        if (fd2 < 0) {
+            if (errno == EEXIST) {
+                return TRUE;
+            }
+            if (errno == EINTR) {
+                continue;
+            }
             g_warning("can't create %s (errno: %i)", file_path, errno);
+            return FALSE;
+        } else {
+            break;
         }
-        return FALSE;
     }
     while (TRUE) {
-        int close_res = close(fd2);
+        close_res = close(fd2);
         if (close_res < 0) {
             if (errno == EINTR) {
                 continue;

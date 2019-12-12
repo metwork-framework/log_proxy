@@ -15,7 +15,6 @@ static GIOChannel *_out_channel = NULL;
 static gboolean _use_locks = FALSE;
 static gchar *_log_file = NULL;
 static glong _log_file_initial_timestamp = 0;
-static glong _log_file_inode = 0;
 
 glong get_output_channel_age() {
     g_assert(_log_file_initial_timestamp > 0);
@@ -35,7 +34,6 @@ void init_output_channel(const gchar *log_file, gboolean use_locks, gboolean for
     _log_file = g_strdup(log_file);
     _use_locks = use_locks;
     create_empty(_log_file);
-    _log_file_inode = get_file_inode(_log_file);
     _log_file_initial_timestamp = -1;
     gchar *content = NULL;
     if (force_control_file == FALSE) {
@@ -69,8 +67,9 @@ void init_output_channel(const gchar *log_file, gboolean use_locks, gboolean for
 gboolean test_output_channel_rotated() {
     g_assert(_out_channel != NULL);
     int fd = g_io_channel_unix_get_fd(_out_channel);
-    glong inode = get_fd_inode(fd);
-    return (inode != _log_file_inode);
+    glong fd_inode = get_fd_inode(fd);
+    glong log_file_inode = get_file_inode(_log_file);
+    return (fd_inode != log_file_inode);
 }
 
 gboolean write_output_channel(GString *buffer) {
