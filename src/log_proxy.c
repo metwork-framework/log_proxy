@@ -188,6 +188,8 @@ int main(int argc, char *argv[])
     setlocale(LC_ALL, "");
     context = g_option_context_new("LOGFILE  - log proxy");
     g_option_context_add_main_entries(context, entries, NULL);
+    gchar *description = "Optional environment variables to override defaults : \n    LOGPROXY_ROTATION_SIZE\n    LOGPROXY_ROTATION_TIME\n    LOGPROXY_ROTATION_SUFFIX\n    LOGPROXY_ROTATED_FILES\n";
+    g_option_context_set_description(context, description);
     if (!g_option_context_parse(context, &argc, &argv, NULL)) {
         g_print(g_option_context_get_help(context, TRUE, NULL));
         exit(1);
@@ -200,6 +202,7 @@ int main(int argc, char *argv[])
     signal(SIGTERM, signal_handler);
     signal(SIGINT, signal_handler);
     log_file = g_strdup(argv[1]);
+    set_default_values_from_env();
     GIOChannel *in = NULL;
     if (fifo == NULL) {
         // We read from stdin
