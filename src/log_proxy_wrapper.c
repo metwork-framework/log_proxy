@@ -84,6 +84,7 @@ int main(int argc, char *argv[])
         g_print(g_option_context_get_help(context, TRUE, NULL));
         exit(1);
     }
+    set_default_values_from_env();
     if (g_strcmp0(stderr_path, "STDOUT") == 0) {
         stderr_path = stdout_path;
     }
