@@ -1,0 +1,30 @@
+# automatically generated from https://github.com/metwork-framework/resources/blob/master/cookiecutter/%7B%7Bcookiecutter.repo%7D%7D/mergify.yml)
+
+pull_request_rules:
+
+- name: master branch
+  actions:
+    merge:
+      method: merge
+      strict: true
+    delete_head_branch: {}
+  conditions:
+    - base=master
+    - -merged
+    - -closed
+    - label!=Merge Manual
+    - status-success=continuous-integration/drone/pr
+    - '#approved-reviews-by>=1'
+- name: master branch forced
+  actions:
+    merge:
+      method: merge
+      strict: true
+    delete_head_branch: {}
+  conditions:
+    - base=master
+    - -merged
+    - -closed
+    - label!=Merge Manual
+    - label=Merge Now
+
