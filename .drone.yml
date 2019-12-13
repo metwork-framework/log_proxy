@@ -1,0 +1,11 @@
+pipeline:
+  build:
+    image: metwork/mfcom-${OS_VERSION}-buildimage:integration
+    commands:
+      - /opt/metwork-mfext/bin/mfext_wrapper -- make install
+
+matrix:
+  OS_VERSION:
+    - centos6
+    - centos7
+    - centos8
