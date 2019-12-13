@@ -8,4 +8,3 @@ matrix:
   OS_VERSION:
     - centos6
     - centos7
-    - centos8
