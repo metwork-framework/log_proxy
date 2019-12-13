@@ -42,6 +42,6 @@ out.o: out.c out.h
 util.o: util.c util.h
 	$(CC) -c -o $@ $(_CFLAGS) $<
 
-install:
+install: $(BINARIES)
 	mkdir -p $(PREFIX)/bin
 	cp -f $(BINARIES) $(PREFIX)/bin/
