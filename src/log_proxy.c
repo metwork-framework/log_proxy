@@ -90,6 +90,13 @@ gboolean rotate() {
     return result;
 }
 
+void signal_handler(int signum) {
+    if ((signum == SIGTERM) || (signum == SIGTERM)) {
+        // nice exit to execute exit_handler
+        exit(0);
+    }
+}
+
 static void every_second(int sig) {
     int fd = lock_control_file(log_file);
     if (fd >= 0) {
@@ -190,6 +197,8 @@ int main(int argc, char *argv[])
         exit(1);
     }
     atexit(exit_handler);
+    signal(SIGTERM, signal_handler);
+    signal(SIGINT, signal_handler);
     log_file = g_strdup(argv[1]);
     GIOChannel *in = NULL;
     if (fifo == NULL) {
