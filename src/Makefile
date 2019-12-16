@@ -19,7 +19,7 @@ _CFLAGS=$(CFLAGS) -I. $(shell pkg-config --cflags glib-2.0) -fPIC -Wall -std=c99
 CC=gcc
 
 OBJECTS=util.o control.o out.o
-BINARIES=log_proxy log_proxy_wrapper
+BINARIES=log_proxy log_proxy_wrapper test_log_proxy
 LIBS=
 
 all: $(OBJECTS) $(BINARIES) $(LIBS)
@@ -31,6 +31,9 @@ log_proxy: log_proxy.c $(OBJECTS) options.h
 	$(CC) $(_CFLAGS) $(_LDFLAGS) -o $@ $^
 
 log_proxy_wrapper: log_proxy_wrapper.c $(OBJECTS) options.h
+	$(CC) $(_CFLAGS) $(_LDFLAGS) -o $@ $^
+
+test_log_proxy: test_log_proxy.c $(OBJECTS)
 	$(CC) $(_CFLAGS) $(_LDFLAGS) -o $@ $^
 
 control.o: control.c control.h

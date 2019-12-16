@@ -35,7 +35,6 @@
 *.i*86
 *.x86_64
 *.hex
-logproxy
 
 # Debug files
 *.dSYM/
@@ -53,3 +52,4 @@ Mkfile.old
 dkms.conf
 log_proxy
 log_proxy_wrapper
+test_log_proxy
