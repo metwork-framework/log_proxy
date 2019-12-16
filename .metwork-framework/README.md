@@ -59,13 +59,25 @@ Help Options:
   -h, --help                Show help options
 
 Application Options:
-  -s, --rotation-size       maximum size (in bytes) for a log file before rotation (0 => no maximum, default: 104857600 (100MB))
-  -t, --rotation-time       maximum lifetime (in seconds) for a log file before rotation (0 => no maximum, default: 86400 (24H))
-  -S, --rotation-suffix     strftime based suffix to append to rotated log files (default: .%Y%m%d%H%M%S)
-  -n, --rotated-files       maximum number of rotated files to keep including main one (0 => no cleaning, default: 5)
+  -s, --rotation-size       maximum size (in bytes) for a log file before rotation (0 => no maximum, default: content of environment variable LOGPROXY_ROTATION_SIZE or 104857600 (100MB))
+  -t, --rotation-time       maximum lifetime (in seconds) for a log file before rotation (0 => no maximum, default: content of environment variable LOGPROXY_ROTATION_TIME or 86400 (24H))
+  -S, --rotation-suffix     strftime based suffix to append to rotated log files (default: content of environment variable LOGPROXY_ROTATION_SUFFIX or .%Y%m%d%H%M%S)
+  -n, --rotated-files       maximum number of rotated files to keep including main one (0 => no cleaning, default: content of environment variable LOGPROXY_ROTATED_FILES or 5)
   -m, --use-locks           use locks to append to main log file (useful if several process writes to the same file)
   -f, --fifo                if set, read lines on this fifo instead of stdin
   -r, --rm-fifo-at-exit     if set, drop fifo at then end of the program (you have to use --fifo option of course)
+
+Optional environment variables to override defaults : 
+    LOGPROXY_ROTATION_SIZE
+    LOGPROXY_ROTATION_TIME
+    LOGPROXY_ROTATION_SUFFIX
+    LOGPROXY_ROTATED_FILES
+
+Example for option rotation-size :
+- If log_proxy is run with the option --rotation-size on command line, rotation-size will take the provided value 
+- If the option --rotation-size is not provided on command line :
+  - If the environment variable LOGPROXY_ROTATION_SIZE is set, rotation-size will take this value
+  - If the environment variable LOGPROXY_ROTATION_SIZE is not set, rotation-size will take the default value 104857600
 ```
 
 ## FIXME
