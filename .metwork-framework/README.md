@@ -48,7 +48,15 @@ But none of them was ok with our needed features:
 
 The [piper tool](https://github.com/gongled/piper) was the more close but does not support the last feature (several instances to the same log file).
 
-## Help
+## Usage
+
+### As a filter
+
+```console
+your_app your_app_arg1 your_app_arg2 2>&1 |log_proxy --rotation-size=1000000 my_log_file_max_1MB.log
+```
+
+Full help:
 
 ```console
 $ ./log_proxy --help
@@ -73,13 +81,35 @@ Optional environment variables to override defaults :
     LOGPROXY_ROTATION_SUFFIX
     LOGPROXY_ROTATED_FILES
 
-Example for option rotation-size :
+Example for rotation-size option :
 - If log_proxy is run with the option --rotation-size on command line, rotation-size will take the provided value 
 - If the option --rotation-size is not provided on command line :
   - If the environment variable LOGPROXY_ROTATION_SIZE is set, rotation-size will take this value
   - If the environment variable LOGPROXY_ROTATION_SIZE is not set, rotation-size will take the default value 104857600
 ```
 
-## FIXME
+## As a wrapper
 
-to be continued
+```console
+log_proxy_wrapper --rotation-size=1000000 --stdout=my_log_file_max_1MB.log --stderr=STDOUT -- your_app your_app_arg1 your_app_arg2
+```
+
+Full help:
+
+```console
+$ ./log_proxy_wrapper --help
+Usage:
+  log_proxy_wrapper [OPTION?] -- COMMAND [COMMAND_ARG1] [COMMAND_ARG2] [...] - log proxy
+
+Help Options:
+  -h, --help                Show help options
+
+Application Options:
+  -s, --rotation-size       maximum size (in bytes) for a log file before rotation (0 => no maximum, default: content of environment variable LOGPROXY_ROTATION_SIZE or 104857600 (100MB))
+  -t, --rotation-time       maximum lifetime (in seconds) for a log file before rotation (0 => no maximum, default: content of environment variable LOGPROXY_ROTATION_TIME or 86400 (24H))
+  -S, --rotation-suffix     strftime based suffix to append to rotated log files (default: content of environment variable LOGPROXY_ROTATION_SUFFIX or .%Y%m%d%H%M%S
+  -n, --rotated-files       maximum number of rotated files to keep including main one (0 => no cleaning, default: content of environment variable LOGPROXY_ROTATED_FILES or 5)
+  -m, --use-locks           use locks to append to main log file (useful if several process writes to the same file)
+  -O, --stdout              stdout file path (NULL string (default) can be used to redirect to /dev/null)
+  -E, --stderr              stderr file path (STDOUT string (default) can be used to redirect to the same file than stdout)
+```
