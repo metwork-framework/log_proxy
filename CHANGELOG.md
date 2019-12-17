@@ -11,6 +11,7 @@
 
 
 ### Bug Fixes
+- fix initialization value and GOptionArg type for long parameters
 - don't leak fifo if SIGTERM or SIGINT
 - post test fixes
 
