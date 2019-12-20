@@ -51,20 +51,20 @@ gboolean init_control_file(const gchar *path, const gchar *content) {
  *                       returns until an exclusive lock is obtained)
  *                   if FALSE, the call is not blocking and you need to provide an
  *                       elapsed time max before giving up
- * @param time_max : maximum elapsed time (in seconds) before giving up (relevant only
- *     if blocking is TRUE). If time_max = -1, default value will be 3600 (one hour)
+ * @param timeout : maximum elapsed time (in seconds) before giving up (relevant only
+ *     if blocking is TRUE). If timeout = -1, default value will be 3600 (one hour)
  * @return a file descriptor (< 0 in case of errors)
  */
-int lock_control_file(const gchar *path, gboolean blocking, int time_max) {
+int lock_control_file(const gchar *path, gboolean blocking, int timeout) {
     int fd = -1;
-    int timeMax;
+    int timeOut;
     int res = -1;
     if ( ! blocking ) {
-        if (time_max == -1 ) {
-            timeMax = 3600; // 1 hour
+        if (timeout == -1 ) {
+            timeOut = 3600; // 1 hour
         }
         else {
-            timeMax = time_max;
+            timeOut = timeout;
         }
     }
     while (TRUE) {
@@ -98,8 +98,8 @@ int lock_control_file(const gchar *path, gboolean blocking, int time_max) {
     else {
         glong t1 = get_current_timestamp();
         glong t2 = t1;
-        // try until timeMax has elapsed
-        while ((t2 - t1) <= timeMax) {
+        // try until timeOut has elapsed
+        while ((t2 - t1) <= timeOut) {
             res = flock(fd, LOCK_EX | LOCK_NB); // not a blocking call
             t2 = get_current_timestamp();
             if (res < 0) {
