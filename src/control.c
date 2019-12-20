@@ -83,7 +83,7 @@ int lock_control_file(const gchar *path, gboolean blocking, int time_max) {
     }
     if ( blocking ) {
         while (TRUE) {
-            res = flock(fd, LOCK_EX);
+            res = flock(fd, LOCK_EX); // blocking call
             if (res < 0) {
                 if (errno == EINTR) {
                     // try another time
@@ -98,8 +98,9 @@ int lock_control_file(const gchar *path, gboolean blocking, int time_max) {
     else {
         glong t1 = get_current_timestamp();
         glong t2 = t1;
+        // try until timeMax has elapsed
         while ((t2 - t1) <= timeMax) {
-            res = flock(fd, LOCK_EX | LOCK_NB);
+            res = flock(fd, LOCK_EX | LOCK_NB); // not a blocking call
             t2 = get_current_timestamp();
             if (res < 0) {
                 if (errno == EINTR || errno == EWOULDBLOCK) {
