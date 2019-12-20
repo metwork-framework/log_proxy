@@ -6,6 +6,7 @@
 #include <errno.h>
 #include <string.h>
 #include "control.h"
+#include "util.h"
 
 gchar *_get_control_file_path(const gchar *path) {
     return g_strdup_printf("%s.control", path);
@@ -14,7 +15,7 @@ gchar *_get_control_file_path(const gchar *path) {
 /**
  * Init the control file with the given content.
  *
- * If the file already exists or if errors, FALSE is returned.
+ * If errors, FALSE is returned.
  *
  * @param path log file path.
  * @param content the content to put in the control file.
@@ -46,10 +47,26 @@ gboolean init_control_file(const gchar *path, const gchar *content) {
  * If the returned value is >=0, we have an exclusive lock.
  *
  * @param path log file path.
+ * @param blocking : if TRUE, the call to flock is blocking (the function will never
+ *                       returns until an exclusive lock is obtained)
+ *                   if FALSE, the call is not blocking and you need to provide an
+ *                       elapsed time max before giving up
+ * @param time_max : maximum elapsed time (in seconds) before giving up (relevant only
+ *     if blocking is TRUE). If time_max = -1, default value will be 3600 (one hour)
  * @return a file descriptor (< 0 in case of errors)
  */
-int lock_control_file(const gchar *path) {
+int lock_control_file(const gchar *path, gboolean blocking, int time_max) {
     int fd = -1;
+    int timeMax;
+    int res = -1;
+    if ( ! blocking ) {
+        if (time_max == -1 ) {
+            timeMax = 3600; // 1 hour
+        }
+        else {
+            timeMax = time_max;
+        }
+    }
     while (TRUE) {
         gchar *cfile = _get_control_file_path(path);
         fd = open(cfile, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
@@ -64,17 +81,37 @@ int lock_control_file(const gchar *path) {
             break;
         }
     }
-    while (TRUE) {
-        int res = flock(fd, LOCK_EX);
-        if (res < 0) {
-            if (errno == EINTR) {
-                // try another time
-                continue;
+    if ( blocking ) {
+        while (TRUE) {
+            res = flock(fd, LOCK_EX);
+            if (res < 0) {
+                if (errno == EINTR) {
+                    // try another time
+                    continue;
+                }
+                return -1;
+            } else {
+                break;
             }
-            return -1;
-        } else {
-            break;
         }
+    }
+    else {
+        glong t1 = get_current_timestamp();
+        glong t2 = t1;
+        while ((t2 - t1) <= timeMax) {
+            res = flock(fd, LOCK_EX | LOCK_NB);
+            t2 = get_current_timestamp();
+            if (res < 0) {
+                if (errno == EINTR || errno == EWOULDBLOCK) {
+                    // try another time
+                    continue;
+                }
+                return -1;
+            } else {
+                break;
+            }
+        }
+        if (res < 0 ) return -1;
     }
     return fd;
 }
