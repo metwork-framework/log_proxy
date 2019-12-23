@@ -9,6 +9,7 @@
 #include "util.h"
 #include "control.h"
 
+//tests on util.c
 void test_get_current_timestamp()
 {
     glong t1 = get_current_timestamp();
@@ -78,6 +79,7 @@ void test_create_empty()
     g_unlink("example_file");
 }
 
+//tests on control.c
 void test_manage_control_file()
 {
     g_unlink("log_file.control");
@@ -117,11 +119,36 @@ void test_blocked_control_file()
         printf("unexpected lock success %d\n", fd2);
         return;
     }
-    g_test_trap_subprocess(NULL, 3000000, 0); //execute test in subprocess with 3 seconds timeout
+    g_test_trap_subprocess(NULL, 2000000, 0); //execute test in subprocess with 2 seconds timeout
     // check it failed (blocking call)
-    g_test_trap_assert_failed();
+    g_test_trap_reached_timeout();
 }
 
+void thread_lock_control_file()
+{
+    glong fd1 = -1;
+    fd1 = lock_control_file("log_file", TRUE, -1);
+    g_assert(fd1 >= 0);
+    g_thread_exit((gpointer)fd1);
+}
+
+void test_lock_unlock_control_file()
+{
+    //lock control file
+    int fd2 = lock_control_file("log_file", TRUE, -1);
+    g_assert(fd2 >= 0);
+    //run thread trying to get lock (blocking)
+    GThread *thread = g_thread_new("thread", (GThreadFunc)thread_lock_control_file, NULL);
+    //sleep a while
+    sleep(1);
+    //unlock control file
+    unlock_control_file(fd2);
+    //check thread has obtain lock
+    gpointer val = g_thread_join(thread); 
+    g_assert((glong)val > 0);
+}
+
+//tests on out.c
 int main(int argc, char *argv[])
 {
     g_test_init (&argc, &argv, NULL);
@@ -135,6 +162,7 @@ int main(int argc, char *argv[])
     g_test_add_func("/log_proxy/test_create_empty", test_create_empty);
     g_test_add_func("/log_proxy/test_manage_control_file", test_manage_control_file);
     g_test_add_func("/log_proxy/test_blocked_control_file", test_blocked_control_file);
+    g_test_add_func("/log_proxy/test_lock_unlock_control_file", test_lock_unlock_control_file);
     int res = g_test_run();
     return res;
 }
