@@ -1,5 +1,6 @@
 #include <glib.h>
 #include <glib/gstdio.h>
+#include <glib/gi18n.h>
 #include <fcntl.h>
 #include <locale.h>
 #include <string.h>
@@ -52,8 +53,7 @@ void test_get_fd_inode()
 {
     int fd = g_open("example_file", O_CREAT);
     g_assert(get_fd_inode(fd) > 0);
-    GError *err = NULL;
-    g_close(fd, &err);
+    close(fd);
     g_remove("example_file");
     g_assert(get_fd_inode(fd) == -1);
 }
@@ -88,46 +88,41 @@ void test_manage_control_file()
     // check content
     g_assert_cmpstr(get_control_file_content("log_file"), ==, "start");
     // lock control file (blocking)
-    int fd1 = lock_control_file("log_file", TRUE, -1);
+    int fd1 = lock_control_file("log_file");
     g_assert(fd1 >= 0);
     // check inode
     int fd2 = g_open("log_file.control", O_RDONLY);
     g_assert_cmpint(get_fd_inode(fd1), ==, get_fd_inode(fd2));
-    // try to get lock on locked control file (not blocking)
-    glong t1 = get_current_timestamp();
-    fd2 = lock_control_file("log_file", FALSE, 3);
-    // check it failed
-    g_assert(fd2 == -1);
-    glong t2 = get_current_timestamp();
-    g_assert(t2-t1 <= 5);
     // unlock control file
     unlock_control_file(fd1);
     // check control file can be locked again
-    fd1 = lock_control_file("log_file", TRUE, -1);
+    fd1 = lock_control_file("log_file");
     g_assert(fd1 >= 0);
     unlock_control_file(fd1);
 }
 
+#if GLIB_CHECK_VERSION(2,38,0)
 void test_blocked_control_file()
 {
     if (g_test_subprocess()) {
         //lock control file
-        int fd1 = lock_control_file("log_file", TRUE, -1);
+        int fd1 = lock_control_file("log_file");
         g_assert(fd1 >= 0);
         //try to lock locked control file (should be blocked)
-        int fd2 = lock_control_file("log_file", TRUE, -1);
-        printf("unexpected lock %d\n", fd2);
+        lock_control_file("log_file");
         return;
     }
-    g_test_trap_subprocess(NULL, 3000000, 0); //execute test in subprocess with 3 seconds timeout
+    g_test_trap_subprocess(NULL, 2000000, 0); //execute test in subprocess with 3 seconds timeout
     // check it failed (control file was blocked)
     g_test_trap_assert_failed();
 }
+#endif
 
+#if GLIB_CHECK_VERSION(2,32,0)
 void thread_lock_control_file()
 {
     glong fd1 = -1;
-    fd1 = lock_control_file("log_file", TRUE, -1);
+    fd1 = lock_control_file("log_file");
     g_assert(fd1 >= 0);
     g_thread_exit((gpointer)fd1);
 }
@@ -135,9 +130,9 @@ void thread_lock_control_file()
 void test_lock_unlock_control_file()
 {
     //lock control file
-    int fd2 = lock_control_file("log_file", TRUE, -1);
+    int fd2 = lock_control_file("log_file");
     g_assert(fd2 >= 0);
-    //run thread trying to get lock (blocking)
+    //run thread trying to get lock 
     GThread *thread = g_thread_new("thread", (GThreadFunc)thread_lock_control_file, NULL);
     //sleep a while
     sleep(1);
@@ -147,6 +142,7 @@ void test_lock_unlock_control_file()
     gpointer val = g_thread_join(thread); 
     g_assert((glong)val > 0);
 }
+#endif
 
 //tests on out.c
 int main(int argc, char *argv[])
@@ -161,8 +157,12 @@ int main(int argc, char *argv[])
     g_test_add_func("/log_proxy/test_compute_strftime_suffix", test_compute_strftime_suffix);
     g_test_add_func("/log_proxy/test_create_empty", test_create_empty);
     g_test_add_func("/log_proxy/test_manage_control_file", test_manage_control_file);
+#if GLIB_CHECK_VERSION(2,38,0)
     g_test_add_func("/log_proxy/test_blocked_control_file", test_blocked_control_file);
+#endif
+#if GLIB_CHECK_VERSION(2,32,0)
     g_test_add_func("/log_proxy/test_lock_unlock_control_file", test_lock_unlock_control_file);
+#endif
     int res = g_test_run();
     return res;
 }
