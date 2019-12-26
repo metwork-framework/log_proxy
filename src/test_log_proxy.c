@@ -87,13 +87,13 @@ void test_manage_control_file()
     g_assert(init_control_file("log_file", "start"));
     // check content
     g_assert_cmpstr(get_control_file_content("log_file"), ==, "start");
-    // lock control file (mode with blocking call)
+    // lock control file (blocking)
     int fd1 = lock_control_file("log_file", TRUE, -1);
     g_assert(fd1 >= 0);
     // check inode
     int fd2 = g_open("log_file.control", O_RDONLY);
     g_assert_cmpint(get_fd_inode(fd1), ==, get_fd_inode(fd2));
-    // try to get lock on locked control file (mode with no blocking call)
+    // try to get lock on locked control file (not blocking)
     glong t1 = get_current_timestamp();
     fd2 = lock_control_file("log_file", FALSE, 3);
     // check it failed
@@ -102,7 +102,7 @@ void test_manage_control_file()
     g_assert(t2-t1 <= 5);
     // unlock control file
     unlock_control_file(fd1);
-    // check control file can be locked again (mode with blocking call)
+    // check control file can be locked again
     fd1 = lock_control_file("log_file", TRUE, -1);
     g_assert(fd1 >= 0);
     unlock_control_file(fd1);
@@ -114,14 +114,14 @@ void test_blocked_control_file()
         //lock control file
         int fd1 = lock_control_file("log_file", TRUE, -1);
         g_assert(fd1 >= 0);
-        //try to lock locked control file (should be a blocking call)
+        //try to lock locked control file (should be blocked)
         int fd2 = lock_control_file("log_file", TRUE, -1);
-        printf("unexpected lock success %d\n", fd2);
+        printf("unexpected lock %d\n", fd2);
         return;
     }
-    g_test_trap_subprocess(NULL, 2000000, 0); //execute test in subprocess with 2 seconds timeout
-    // check it failed (blocking call)
-    g_test_trap_reached_timeout();
+    g_test_trap_subprocess(NULL, 3000000, 0); //execute test in subprocess with 3 seconds timeout
+    // check it failed (control file was blocked)
+    g_test_trap_assert_failed();
 }
 
 void thread_lock_control_file()
