@@ -98,7 +98,7 @@ void signal_handler(int signum) {
 }
 
 static void every_second(int sig) {
-    int fd = lock_control_file(log_file, TRUE, -1);
+    int fd = lock_control_file(log_file);
     if (fd >= 0) {
         if (first_iteration) {
             // A little bit of cleaning for first iteration
@@ -164,7 +164,7 @@ void init_every_second_signal() {
 }
 
 void init_or_reinit_output_channel(const gchar *lg_file, gboolean us_locks) {
-    int lock_fd = lock_control_file(lg_file, TRUE, -1);
+    int lock_fd = lock_control_file(lg_file);
     if (lock_fd < 0) {
         g_critical("can't lock control file for log_file=%s => exiting", lg_file);
         exit(2);
