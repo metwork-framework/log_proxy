@@ -4,6 +4,7 @@
 ## [Unreleased]
 
 ### New Features
+- add other tests on control.c
 - add non blocking mode to lock_control_file
 - add optional environment variables to override default values
 - first try with log_proxy_wrapper
