@@ -24,6 +24,9 @@ LIBS=
 
 all: $(OBJECTS) $(BINARIES) $(LIBS)
 
+test: test_log_proxy
+	./test_log_proxy && echo "OK"
+
 clean:
 	rm -f $(OBJECTS) $(BINARIES) core.* vgcore.*
 

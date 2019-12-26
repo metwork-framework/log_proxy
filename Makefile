@@ -7,3 +7,5 @@ clean:
 install:
 	cd src && $(MAKE) install
 
+test:
+	cd src && $(MAKE) test
