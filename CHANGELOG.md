@@ -2,6 +2,19 @@
 
 
 
+## v0.0.2 (2020-01-03)
+
+### New Features
+
+
+### Bug Fixes
+- misuse of the g_build_path function
+- misuse of the g_build_path function
+
+
+
+
+
 ## v0.0.1 (2019-12-26)
 
 ### New Features
