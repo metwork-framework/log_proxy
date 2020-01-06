@@ -47,7 +47,7 @@ void clean_too_old_files() {
             continue;
         }
         if (g_str_has_prefix(name, basename)) {
-            gchar *filepath = g_build_path(dirpath, name, NULL);
+            gchar *filepath = g_strdup_printf("%s/%s", dirpath, name);
             list = g_list_insert_sorted(list, filepath,
                     (GCompareFunc) _list_compare);
         }

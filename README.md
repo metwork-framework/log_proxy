@@ -36,6 +36,8 @@ It can be used to avoid loosing some logs if you use `logrotate` with `copytrunc
 - [x] configurable with CLI options as well with env variables
 - [x] usable as a wrapper to capture stdout and stderr (`log_proxy_wrapper --stdout=/log/myapp.stdout --stderr=/log/myapp.stderr -- myapp myapp_arg1 myapp_arg2`)
 - [x] usable as a wrapper to capture stdout and stderr in the same file (`log_proxy_wrapper --stdout=/log/myapp.log --stderr=STDOUT -- myapp myapp_arg1 myapp_arg2`)
+- [x] very few dependencies (only `glib2` is required)
+- [x] very easy to build (event on old distributions like `CentOS 6`)
 
 ## Why this tool?
 
@@ -61,6 +63,28 @@ But none of them was ok with our needed features:
 - (and) several instances of the same app can log to the same log file without issue
 
 The [piper tool](https://github.com/gongled/piper) was the more close but does not support the last feature (several instances to the same log file).
+
+## Build & Install
+
+### Requirements
+
+A Linux/Unix distribution with standard development tools (`git`, `gcc`, `make`, `pkg-config`) and `glib2` library with `devel` support (provided for example in CentOS 6 in the `glib2-devel` standard package).
+
+### Build
+
+```console
+git clone https://github.com/metwork-framework/log_proxy # or download/unpack a zip with the github interface
+cd log_proxy
+make
+```
+
+### Install
+
+Then as `root` user or prefixed with `sudo`:
+
+```console
+make PREFIX=/usr/local install
+```
 
 ## Usage
 
