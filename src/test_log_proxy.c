@@ -86,7 +86,9 @@ void test_manage_control_file()
     // check init control file
     g_assert(init_control_file("log_file", "start"));
     // check content
-    g_assert_cmpstr(get_control_file_content("log_file"), ==, "start");
+    gchar* content = get_control_file_content("log_file");
+    g_assert_cmpstr(content, ==, "start");
+    g_free(content);
     // lock control file (blocking)
     int fd1 = lock_control_file("log_file");
     g_assert(fd1 >= 0);

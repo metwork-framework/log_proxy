@@ -2,9 +2,12 @@ pipeline:
   build:
     image: metwork/mfxxx-${OS_VERSION}-buildimage:integration
     commands:
-      - /opt/metwork-mfext/bin/mfext_wrapper -- make install
+      - /opt/metwork-mfext/bin/mfext_wrapper -- make
       - /opt/metwork-mfext/bin/mfext_wrapper -- make test
+      - /opt/metwork-mfext/bin/mfext_wrapper -- make leak
       - /opt/metwork-mfext/bin/mfext_wrapper -- make clean
+      - /opt/metwork-mfext/bin/mfext_wrapper -- make
+      - /opt/metwork-mfext/bin/mfext_wrapper -- make install
 
 matrix:
   OS_VERSION:
