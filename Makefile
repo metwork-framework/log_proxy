@@ -9,3 +9,9 @@ install:
 
 test:
 	cd src && $(MAKE) test
+
+leak:
+	cd src && $(MAKE) leak
+
+coverage:
+	cd src && $(MAKE) coverage
