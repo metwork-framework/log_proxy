@@ -17,6 +17,7 @@ It can be used to avoid loosing some logs if you use `logrotate` with `copytrunc
 - [x] several instances of the same app can log to the same file without issue (example: `myapp arg1 |log_proxy --use-locks /log/myapp.log` and `myapp arg2 |log_proxy --use-locks /log/myapp.log` can run at the same time)
 - [ ] configurable action (a command to execute) to run after each log rotation
 - [ ] rock solid
+- [ ] option to add a timestamp before each log line
 - [x] really fast
 - [x] do not eat a lot of memory
 - [x] configurable with CLI options as well with env variables
