@@ -188,7 +188,7 @@ int main(int argc, char *argv[])
     setlocale(LC_ALL, "");
     context = g_option_context_new("LOGFILE  - log proxy");
     g_option_context_add_main_entries(context, entries, NULL);
-    gchar *description = "Optional environment variables to override defaults: \n    LOGPROXY_ROTATION_SIZE\n    LOGPROXY_ROTATION_TIME\n    LOGPROXY_ROTATION_SUFFIX\n    LOGPROXY_ROTATED_FILES\n\nExample for rotation-size option:\n- If log_proxy is run with the option --rotation-size on the command line, rotation-size will take the provided value\n- If the option --rotation-size is not provided on command line :\n  - If the environment variable LOGPROXY_ROTATION_SIZE is set, rotation-size will take this value\n  - If the environment variable LOGPROXY_ROTATION_SIZE is not set, rotation-size will take the default value 104857600\n";
+    gchar *description = "Optional environment variables to override defaults: \n    LOGPROXY_ROTATION_SIZE\n    LOGPROXY_ROTATION_TIME\n    LOGPROXY_ROTATION_SUFFIX\n    LOGPROXY_LOG_DIRECTORY\n    LOGPROXY_ROTATED_FILES\n\nExample for rotation-size option:\n- If log_proxy is run with the option --rotation-size on the command line, rotation-size will take the provided value\n- If the option --rotation-size is not provided on command line :\n  - If the environment variable LOGPROXY_ROTATION_SIZE is set, rotation-size will take this value\n  - If the environment variable LOGPROXY_ROTATION_SIZE is not set, rotation-size will take the default value 104857600\n";
     g_option_context_set_description(context, description);
     if (!g_option_context_parse(context, &argc, &argv, NULL)) {
         g_print(g_option_context_get_help(context, TRUE, NULL));
@@ -201,8 +201,17 @@ int main(int argc, char *argv[])
     atexit(exit_handler);
     signal(SIGTERM, signal_handler);
     signal(SIGINT, signal_handler);
-    log_file = g_strdup(argv[1]);
     set_default_values_from_env();
+    log_file = compute_file_path(log_directory, argv[1]);
+    // Create log directory if not existing
+    gchar *log_dir = g_path_get_dirname(log_file);
+    if ( ! g_file_test(log_dir, G_FILE_TEST_IS_DIR) ) {
+        if ( g_mkdir_with_parents(log_dir, 0755) == -1 ) {
+            g_critical("Can't create directory %s => exit", log_dir);
+            return 1;
+        }
+    }
+    g_free(log_dir);
     GIOChannel *in = NULL;
     if (fifo == NULL) {
         // We read from stdin
@@ -240,5 +249,6 @@ int main(int argc, char *argv[])
     g_io_channel_unref(in);
     g_string_free(in_buffer, TRUE);
     g_option_context_free(context);
+    g_free(log_file);
     return 0;
 }
