@@ -3,7 +3,6 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <limits.h>
 #include "util.h"
 
 static GRand *__rand = NULL;
