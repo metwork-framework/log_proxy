@@ -65,7 +65,7 @@ void set_default_values_from_env()
             log_directory = (gchar *)env_val;
         }
         else {
-            log_directory = g_strdup(g_get_current_dir());
+            log_directory = g_get_current_dir();
         }
     }
 }
