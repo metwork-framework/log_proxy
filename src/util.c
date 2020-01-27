@@ -113,6 +113,28 @@ gchar *compute_strftime_suffix(const gchar *str, const gchar *strftime_suffix) {
 }
 
 /**
+ * Compute absolute file path from directory path and file name
+ *
+ * @param directory absolute or relative directory path
+ * @param file_name file name (absolute or relative, if absolute directory is ignored)
+ * @return newly allocated string (free it with g_free) with absolute path to the file
+ */
+gchar *compute_file_path(const gchar *directory, const gchar *file_name) {
+    if ( file_name[0] == '/' ) {
+        return g_strdup_printf("%s", file_name);
+    }
+    else {
+        if ( directory[0] == '/' ) {
+            return g_strdup_printf("%s/%s", directory, file_name);
+        }
+        else {
+            return g_strdup_printf("%s/%s/%s", g_get_current_dir(), directory,
+                                   file_name);
+        }
+    }
+}
+
+/**
  * Create an empty file if it does not exist
  *
  * Note: if the file already exists, nothing is done and TRUE is returned.
