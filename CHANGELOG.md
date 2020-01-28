@@ -2,6 +2,16 @@
 
 
 
+## v0.0.3 (2020-01-27)
+
+### New Features
+- add possibility to specify a log directory
+
+
+
+
+
+
 ## v0.0.2 (2020-01-03)
 
 ### New Features
