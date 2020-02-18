@@ -82,7 +82,7 @@ void test_create_empty()
 //tests on control.c
 void test_manage_control_file()
 {
-    g_unlink("log_file.control");
+    g_unlink(".log_file.control");
     // check init control file
     g_assert(init_control_file("log_file", "start"));
     // check content
@@ -93,7 +93,7 @@ void test_manage_control_file()
     int fd1 = lock_control_file("log_file");
     g_assert(fd1 >= 0);
     // check inode
-    int fd2 = g_open("log_file.control", O_RDONLY);
+    int fd2 = g_open(".log_file.control", O_RDONLY);
     g_assert_cmpint(get_fd_inode(fd1), ==, get_fd_inode(fd2));
     // unlock control file
     unlock_control_file(fd1);

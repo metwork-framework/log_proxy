@@ -8,7 +8,12 @@
 #include "control.h"
 
 gchar *_get_control_file_path(const gchar *path) {
-    return g_strdup_printf("%s.control", path);
+    gchar *dirpath = g_path_get_dirname(path);
+    gchar *basename = g_path_get_basename(path);
+    gchar *cfile = g_strdup_printf("%s/.%s.control", dirpath, basename);
+    g_free(dirpath);
+    g_free(basename);
+    return(cfile);
 }
 
 /**
