@@ -33,7 +33,7 @@ void clean_too_old_files() {
         return;
     }
     gchar *basename = g_path_get_basename(log_file);
-    gchar *control = g_strdup_printf("%s.control", basename);
+    gchar *control = g_strdup_printf(".%s.control", basename);
     GList *list = NULL;
     while (TRUE) {
         const gchar *name = g_dir_read_name(dir);
