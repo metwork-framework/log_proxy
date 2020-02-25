@@ -2,6 +2,16 @@
 
 
 
+## v0.0.5 (2020-02-24)
+
+### New Features
+- prefix control files names by "." (dot)
+
+
+
+
+
+
 ## v0.0.4 (2020-01-28)
 
 - No interesting change
