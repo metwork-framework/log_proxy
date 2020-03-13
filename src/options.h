@@ -4,6 +4,7 @@
 #include <glib.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <sys/resource.h>
 
 static gchar *log_file = NULL;
 static glong rotation_size = -1;
@@ -18,7 +19,8 @@ static gboolean use_locks = FALSE;
 void set_default_values_from_env()
 {
     const gchar *env_val;
-
+    struct rlimit rl;
+    getrlimit(RLIMIT_FSIZE, &rl);
     if ( rotation_size == -1 ) {
         env_val = g_getenv("LOGPROXY_ROTATION_SIZE");
         if ( env_val != NULL ) {
@@ -26,6 +28,12 @@ void set_default_values_from_env()
         }
         else {
             rotation_size = 104857600;
+        }
+    }
+    if ( (long long int) rl.rlim_max != -1 ) {
+        long long int val_max = (long long int) rl.rlim_max * 90 / 100;
+        if ( rotation_size > (int) val_max ) {
+            rotation_size = (int) val_max;
         }
     }
 
