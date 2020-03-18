@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## [Unreleased]
+
+### New Features
+- force rotation-size to 90% of rlimit-fsize (if set)
+
+
+
+
+
 
 ## v0.0.5 (2020-02-24)
 
