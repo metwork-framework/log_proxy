@@ -39,7 +39,7 @@ jobs:
         id: vars
         run: |
           TMPREF=${GITHUB_REF#refs/*/}
-          if [[ "$TMPREF" == */merge ]]; then echo ::set-output name=tag::`echo ${TMPREF} |awk -F '/' '{print $1;}'`; else echo ::set-output name=tag::${TMPREF}; fi
+          if [[ "$TMPREF" == */merge ]]; then echo ::set-output name=tag::`echo pr${TMPREF} |awk -F '/' '{print $1;}'`; else echo ::set-output name=tag::${TMPREF}; fi
       - name: make tar.gz
         run: |
           mv release log_proxy-linux64-${{ steps.vars.outputs.tag }}
