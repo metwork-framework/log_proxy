@@ -19,6 +19,7 @@ jobs:
           name: metwork/logproxy-centos6-buildimage
           context: docker
           cache: true
+          tags: "latest"
   build:
     runs-on: ubuntu-latest
     steps:
