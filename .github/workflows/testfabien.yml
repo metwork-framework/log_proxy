@@ -30,6 +30,8 @@ jobs:
       - name: tar
         run: |
           env |grep GITHUB
+          pwd
+          ls -alrt
       - name: create_release
         id: create_release
         if: startsWith(github.ref, 'refs/tags/v')
