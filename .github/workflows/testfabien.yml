@@ -1,0 +1,18 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ master, testfabien ]
+  pull_request:
+    branches: [ master, testfabien ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    container: centos:6
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: make
+      run: make
