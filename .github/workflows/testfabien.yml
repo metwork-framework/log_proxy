@@ -1,0 +1,74 @@
+name: build
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - v*
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        name: checkout repository
+      - name: make docker buildimage
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          username: "${{ secrets.DOCKER_USERNAME }}"
+          password: "${{ secrets.DOCKER_PASSWORD }}"
+          name: metwork/logproxy-centos6-buildimage
+          context: docker
+          cache: true
+          tags: "latest"
+  build:
+    runs-on: ubuntu-latest
+    needs: prepare
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v2
+      - name: debug env
+        run: env |grep GITHUB
+      - name: build
+        uses: docker://metwork/logproxy-centos6-buildimage
+      - name: compute tag name
+        id: vars
+        run: |
+          TMPREF=${GITHUB_REF#refs/*/}
+          if [[ "$TMPREF" == */merge ]]; then echo ::set-output name=tag::`echo pr${TMPREF} |awk -F '/' '{print $1;}'`; else echo ::set-output name=tag::${TMPREF}; fi
+      - name: make tar.gz
+        run: |
+          mv release log_proxy-linux64-${{ steps.vars.outputs.tag }}
+          tar -cvf log_proxy-linux64-${{ steps.vars.outputs.tag }}.tar log_proxy-linux64-${{ steps.vars.outputs.tag }}
+          gzip log_proxy-linux64-${{ steps.vars.outputs.tag }}.tar
+      - name: upload artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: log_proxy-linux64-${{ steps.vars.outputs.tag }}
+          path: ./log_proxy-linux64-${{ steps.vars.outputs.tag }}
+      - name: create release
+        id: create_release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ steps.vars.outputs.tag }}
+          draft: false
+          prerelease: false
+      - name: upload release asset
+        id: upload-release-asset
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./log_proxy-linux64-${{ steps.vars.outputs.tag }}.tar.gz
+          asset_name: log_proxy-linux64-${{ steps.vars.outputs.tag }}.tar.gz
+          asset_content_type: application/gzip

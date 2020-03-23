@@ -1,4 +1,4 @@
-DEBUG=yes
+DEBUG=no
 ifeq ($(DEBUG),yes)
 	DEBUG_CFLAGS=-g
 else
@@ -8,7 +8,7 @@ FORCE_RPATH=
 ifeq ($(FORCE_RPATH),)
 	FORCE_RPATH_STR=
 else
-	FORCE_RPATH_STR=-Wl,-rpath=$(FORCE_RPATH)
+	FORCE_RPATH_STR=-Wl,-rpath=~$(FORCE_RPATH)~
 endif
 PREFIX=/usr/local
 CFLAGS+=-D_XOPEN_SOURCE=700
@@ -19,7 +19,7 @@ else
     COVERAGE_CFLAGS=
 endif
 
-_LDFLAGS=$(LDFLAGS) -L. $(shell pkg-config --libs glib-2.0) $(FORCE_RPATH_STR)
+_LDFLAGS=$(LDFLAGS) -L. $(shell pkg-config --libs glib-2.0) $(shell echo '$(FORCE_RPATH_STR)' |sed 's/@/$$/g' |sed s/~/"'"/g)
 _CFLAGS=$(CFLAGS) -I. $(shell pkg-config --cflags glib-2.0) -fPIC -Wall -std=c99 -Wextra -pedantic -Werror -Wshadow -Wstrict-overflow -Wno-cast-function-type -fno-strict-aliasing -DG_LOG_DOMAIN=\"log_proxy\" $(DEBUG_CFLAGS) $(COVERAGE_CFLAGS)
 
 CC=gcc
