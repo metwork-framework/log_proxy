@@ -27,11 +27,18 @@ jobs:
       - uses: actions/checkout@v2
       - name: run
         uses: docker://metwork/logproxy-centos6-buildimage
+      - name: Set output
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
       - name: tar
         run: |
-          env |grep GITHUB
-          pwd
-          ls -alrt
+          mv release log_proxy-linux64-${{ steps.vars.outputs.tag }}
+          tar -cvf log_proxy-linux64-${{ steps.vars.outputs.tag }}.tar log_proxy-linux64-${{ steps.vars.outputs.tag }}
+          gzip log_proxy-linux64-${{ steps.vars.outputs.tag }}.tar
+      - uses: actions/upload-artifact@v1
+        with:
+          name: log_proxy-linux64-${{ steps.vars.outputs.tag }}.tar.gz
+          path: ./log_proxy-linux64-${{ steps.vars.outputs.tag }}.tar.gz
       - name: create_release
         id: create_release
         if: startsWith(github.ref, 'refs/tags/v')
@@ -40,7 +47,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          release_name: Release ${{ steps.vars.outputs.tag }}
           draft: false
           prerelease: false
       - name: Upload Release Asset
@@ -51,6 +58,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./my-artifact.zip
-          asset_name: my-artifact.zip
-          asset_content_type: application/zip
+          asset_path: ./log_proxy-linux64-${{ steps.vars.outputs.tag }}.tar.gz
+          asset_name: log_proxy-linux64-${{ steps.vars.outputs.tag }}.tar.gz
+          asset_content_type: application/gzip
