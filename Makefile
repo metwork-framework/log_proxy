@@ -20,6 +20,5 @@ coverage:
 release: clean
 	mkdir -p release/lib
 	cd src && $(MAKE) PREFIX=$(shell pwd)/release FORCE_RPATH='@ORIGIN/../lib' install
-	cp -f `ldd release/bin/log_proxy |grep libglib-2.0.so.0 |awk -F '=> ' '{print $$2;}' |awk '{print $$1;}'` release/lib/
-	ldd release/bin/log_proxy |grep libpcre.so.1 |awk -F '=> ' '{print $$2;}' |awk '{print $$1;}'
-	cp -f `ldd release/bin/log_proxy |grep libpcre.so.1 |awk -F '=> ' '{print $$2;}' |awk '{print $$1;}'` release/lib/
+	ldd release/bin/log_proxy
+	cp -f `ldd release/bin/log_proxy |grep libglib |awk -F '=> ' '{print $$2;}' |awk '{print $$1;}'` `ldd release/bin/log_proxy |grep libpcre |awk -F '=> ' '{print $$2;}' |awk '{print $$1;}'` release/lib/
