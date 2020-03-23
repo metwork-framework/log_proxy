@@ -7,13 +7,13 @@ on:
     branches: [ master, testfabien ]
 
 jobs:
-  prepare:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
   build:
     runs-on: ubuntu-latest
     container: centos:6
     steps:
-    - name: make
-      run: make
+      - uses: actions/checkout@v2
+      - name: pwd
+        run: pwd
+      - name: ls
+        run: ls -alrt
+
