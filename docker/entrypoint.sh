@@ -1,4 +1,5 @@
 #!/bin/bash
 
 make
-make test
+make leak
+make release
