@@ -3,5 +3,5 @@ MAINTAINER Fabien MARTY <fabien.marty@gmail.com>
 
 RUN yum -y install gcc make valgrind
 
-ADD entrypoint.sh
+ADD entrypoint.sh /entrypoint.sh
 CMD /entrypoint.sh
