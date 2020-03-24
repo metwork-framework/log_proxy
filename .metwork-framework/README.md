@@ -36,10 +36,13 @@ To install the binary distribution:
 
 ```
 # As root user (or with sudo)
+# (example with 0.0.8 release, please fix the number to the release you want to install)
+export RELEASE=v0.0.8
 cd /opt
-wget -O log_proxy-linux64-v0.0.8.tar.gz "https://github.com/metwork-framework/log_proxy/releases/download/v0.0.8/log_proxy-linux64-v0.0.8.tar.gz"
-zcat log_proxy-linux64-v0.0.8.tar.gz |tar xvf -
-ln -s log_proxy-linux64-v0.0.8 log_proxy
+wget -O log_proxy-linux64-${RELEASE}.tar.gz "https://github.com/metwork-framework/log_proxy/releases/download/${RELEASE}/log_proxy-linux64-${RELEASE}.tar.gz"
+zcat log_proxy-linux64-${RELEASE}.tar.gz |tar xvf -
+ln -s log_proxy-linux64-${RELEASE} log_proxy
+rm -f log_proxy-linux64-${RELEASE}.tar.gz
 ```
 
 You can now use it with absolute path `/opt/log_proxy/bin/log_proxy` and `opt/log_proxy/bin/log_proxy_wrapper`.
