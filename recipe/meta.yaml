@@ -1,11 +1,14 @@
+{% set name = "log_proxy" %}
+{% set version = "0.0.9" %}
+
 package:
-    name: log_proxy
-    version: v0.0.8
+    name: {{ name }}
+    version: {{ version }}
 
 source:
     #path: ../
-    url: https://github.com/metwork-framework/log_proxy/archive/v0.0.9.tar.gz
-    fn: v0.0.9.tar.gz
+    url: https://github.com/metwork-framework/{{ name }}/archive/v{{ version }}.tar.gz
+    fn: v{{ version }}.tar.gz
     md5: 906fc1cb87a18122d2b37ca96d96d321
 
 build:
@@ -21,7 +24,7 @@ requirements:
         - glib >2.58
 
 about:
-    description: log_proxy is a tiny C utility for log rotation for apps that write their logs to stdout
-    home: https://github.com/metwork-framework/log_proxy/
+    description: {{ name }} is a tiny C utility for log rotation for apps that write their logs to stdout
+    home: https://github.com/metwork-framework/{{ name }}/
     license: BSD
 
