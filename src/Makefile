@@ -10,7 +10,13 @@ ifeq ($(FORCE_RPATH),)
 else
 	FORCE_RPATH_STR=-Wl,-rpath=~$(FORCE_RPATH)~
 endif
-PREFIX=/usr/local
+
+# Don't set PREFIX and CC in conda env
+ifeq ($(CONDA_PREFIX),)
+    PREFIX=/usr/local
+    CC=gcc
+endif
+
 CFLAGS+=-D_XOPEN_SOURCE=700
 
 ifeq ($(COVERAGE),yes)
@@ -19,10 +25,15 @@ else
     COVERAGE_CFLAGS=
 endif
 
-_LDFLAGS=$(LDFLAGS) -L. $(shell pkg-config --libs glib-2.0) $(shell echo '$(FORCE_RPATH_STR)' |sed 's/@/$$/g' |sed s/~/"'"/g)
-_CFLAGS=$(CFLAGS) -I. $(shell pkg-config --cflags glib-2.0) -fPIC -Wall -std=c99 -Wextra -pedantic -Werror -Wshadow -Wstrict-overflow -Wno-cast-function-type -fno-strict-aliasing -DG_LOG_DOMAIN=\"log_proxy\" $(DEBUG_CFLAGS) $(COVERAGE_CFLAGS)
+GCC_VERSION=`gcc --version | head -1 | cut -d" " -f3 | cut -d"." -f1-3`
 
-CC=gcc
+ifeq ($(shell expr $(GCC_VERSION) \< "8.0.0" ), 1)
+    _CFLAGS=$(CFLAGS) -I. $(shell pkg-config --cflags glib-2.0) -fPIC -Wall -std=c99 -Wextra -pedantic -Werror -Wshadow -Wstrict-overflow -Wno-deprecated-declarations -fno-strict-aliasing -DG_LOG_DOMAIN=\"log_proxy\" $(DEBUG_CFLAGS) $(COVERAGE_CFLAGS)
+else
+    _CFLAGS=$(CFLAGS) -I. $(shell pkg-config --cflags glib-2.0) -fPIC -Wall -std=c99 -Wextra -pedantic -Werror -Wshadow -Wstrict-overflow -Wno-deprecated-declarations -Wno-cast-function-type -fno-strict-aliasing -DG_LOG_DOMAIN=\"log_proxy\" $(DEBUG_CFLAGS) $(COVERAGE_CFLAGS)
+endif
+
+_LDFLAGS=$(LDFLAGS) -L. $(shell pkg-config --libs glib-2.0) $(shell echo '$(FORCE_RPATH_STR)' |sed 's/@/$$/g' |sed s/~/"'"/g)
 
 .PHONY: coverage leak test clean all
 
