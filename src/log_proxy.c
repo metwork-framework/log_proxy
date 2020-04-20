@@ -236,13 +236,16 @@ int main(int argc, char *argv[])
                 gboolean write_status = write_output_channel(in_buffer);
                 if (write_status == FALSE) {
                     g_warning("error during write on: %s", log_file);
+                    alarm(0);  // to avoid a potential deadlock with SIGALARM every_second() calls
                     init_or_reinit_output_channel(log_file, use_locks);
+                    alarm(1);
                     continue;
                 }
                 break;
             }
         }
     }
+    alarm(0);  // to avoid a potential deadlock with SIGALARM every_second() calls
     every_second(-1);
     destroy_output_channel();
     g_io_channel_shutdown(in, FALSE, NULL);
