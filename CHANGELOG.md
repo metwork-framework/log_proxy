@@ -1,6 +1,17 @@
 # CHANGELOG
 
 
+## [Unreleased]
+
+### New Features
+
+
+### Bug Fixes
+- fix a potential deadlock in some corner cases
+
+
+
+
 
 ## v0.0.9 (2020-04-16)
 
