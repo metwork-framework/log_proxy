@@ -48,7 +48,7 @@ clean::
 	rm -f app.info *.gcno *.gcda
 
 log_proxy: log_proxy.c $(OBJECTS) options.h
-	@echo $(value GCC_VERSION)
+	@echo $(GCC_VERSION)
 	$(GCC) $(_CFLAGS) $(_LDFLAGS) -o $@ $^
 
 log_proxy_wrapper: log_proxy_wrapper.c $(OBJECTS) options.h
