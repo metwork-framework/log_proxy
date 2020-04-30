@@ -25,10 +25,10 @@ endif
 GCC_VERSION=`$(GCC) --version | head -1 | cut -d" " -f3 | cut -d"." -f1-3`
 
 ifeq ($(shell expr $(GCC_VERSION) \< "8.0.0" ), 1)
-    $(GCC) --version
+    $(shell $(GCC) --version)
     _CFLAGS=$(CFLAGS) -I. $(shell pkg-config --cflags glib-2.0) -fPIC -Wall -std=c99 -Wextra -pedantic -Werror -Wshadow -Wstrict-overflow -Wno-deprecated-declarations -fno-strict-aliasing -DG_LOG_DOMAIN=\"log_proxy\" $(DEBUG_CFLAGS) $(COVERAGE_CFLAGS)
 else
-    $(GCC) --version
+    $(shell $(GCC) --version)
     _CFLAGS=$(CFLAGS) -I. $(shell pkg-config --cflags glib-2.0) -fPIC -Wall -std=c99 -Wextra -pedantic -Werror -Wshadow -Wstrict-overflow -Wno-deprecated-declarations -Wno-cast-function-type -fno-strict-aliasing -DG_LOG_DOMAIN=\"log_proxy\" $(DEBUG_CFLAGS) $(COVERAGE_CFLAGS)
 endif
 
