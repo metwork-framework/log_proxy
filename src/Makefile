@@ -11,11 +11,8 @@ else
 	FORCE_RPATH_STR=-Wl,-rpath=~$(FORCE_RPATH)~
 endif
 
-# Don't set PREFIX and CC in conda env
-ifeq ($(CONDA_PREFIX),)
-    PREFIX=/usr/local
-    CC=gcc
-endif
+PREFIX?=/usr/local
+CC?=gcc
 
 CFLAGS+=-D_XOPEN_SOURCE=700
 
