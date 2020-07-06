@@ -181,7 +181,7 @@ make
 Then as `root` user or prefixed with `sudo`:
 
 ```console
-make PREFIX=/usr/local install
+make DESTDIR=/usr/local/bin install
 ```
 
 
