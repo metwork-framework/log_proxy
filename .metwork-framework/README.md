@@ -166,5 +166,11 @@ make
 Then as `root` user or prefixed with `sudo`:
 
 ```console
-make PREFIX=/usr/local install
+make install
 ```
+
+This will install `log_proxy` and `log_proxy_wrapper` in `/usr/local/bin`, by default.
+￼
+￼`make install` also supports `PREFIX=...` for installing (for example) into a `/usr` directory other than the one in `/usr/local`, and `DESTDIR=...` for installing into `$DESTDIR/$PREFIX/bin` which is useful when making packages.
+￼
+￼
