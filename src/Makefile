@@ -11,6 +11,7 @@ else
 	FORCE_RPATH_STR=-Wl,-rpath=~$(FORCE_RPATH)~
 endif
 
+DESTDIR=
 PREFIX?=/usr/local
 GCC?=gcc
 
@@ -35,26 +36,27 @@ _LDFLAGS=$(LDFLAGS) -L. $(shell pkg-config --libs glib-2.0) $(shell echo '$(FORC
 .PHONY: coverage leak test clean all
 
 OBJECTS=util.o control.o out.o
-BINARIES=log_proxy log_proxy_wrapper test_log_proxy
+BINARIES=log_proxy log_proxy_wrapper
+TESTS=test_log_proxy
 LIBS=
 
 VALGRIND=./valgrind.sh
 
-all:: $(OBJECTS) $(BINARIES) $(LIBS)
+all:: $(OBJECTS) $(BINARIES) $(TESTS) $(LIBS)
 
 clean::
-	rm -f $(OBJECTS) $(BINARIES) core.* vgcore.*
+	rm -f $(OBJECTS) $(BINARIES) $(TESTS) core.* vgcore.*
 	rm -Rf coverage
 	rm -f app.info *.gcno *.gcda
 
 log_proxy: log_proxy.c $(OBJECTS) options.h
-	$(GCC) $(_CFLAGS) $(_LDFLAGS) -o $@ $^
+	$(GCC) $(_CFLAGS) -o $@ $^ $(_LDFLAGS)
 
 log_proxy_wrapper: log_proxy_wrapper.c $(OBJECTS) options.h
-	$(GCC) $(_CFLAGS) $(_LDFLAGS) -o $@ $^
+	$(GCC) $(_CFLAGS) -o $@ $^ $(_LDFLAGS)
 
 test_log_proxy: test_log_proxy.c $(OBJECTS)
-	$(GCC) $(_CFLAGS) $(_LDFLAGS) -o $@ $^
+	$(GCC) $(_CFLAGS) -o $@ $^ $(_LDFLAGS)
 
 control.o: control.c control.h
 	$(GCC) -c -o $@ $(_CFLAGS) $<
@@ -66,13 +68,13 @@ util.o: util.c util.h
 	$(GCC) -c -o $@ $(_CFLAGS) $<
 
 install: $(BINARIES)
-	mkdir -p $(PREFIX)/bin
-	cp -f $(BINARIES) $(PREFIX)/bin/
+	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	cp -f $(BINARIES) $(DESTDIR)$(PREFIX)/bin
 
-test: test_log_proxy
+test: $(TESTS)
 	./test_log_proxy && echo "OK"
 
-leak: test_log_proxy
+leak: $(TESTS)
 	$(VALGRIND) ./test_log_proxy && echo "OK"
 
 coverage:
