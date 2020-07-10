@@ -42,9 +42,9 @@ bash -c "$(curl -fsSLk https://raw.githubusercontent.com/metwork-framework/log_p
 Notes:
 
 - if you are very concerned about the security of your system and if you don't want to execute
-a remote `root` script on your system, please review the [very small](https://raw.githubusercontent.com/metwork-framework/log_proxy/master/installer/install.sh)
-install script (it's just about downloading and installing two statically compiled binaries in `/usr/local/bin/`)
-- our binary distribution won't work on [Alpine Linux](https://alpinelinux.org/) because of `glibc` replacement but @tomalok is maintaining a [log_proxy Alpine Linux package](https://pkgs.alpinelinux.org/packages?name=log_proxy).
+a remote `root` script on your system, please review the [very small install script](https://raw.githubusercontent.com/metwork-framework/log_proxy/master/installer/install.sh)
+ (it's just about downloading and installing two statically compiled binaries in `/usr/local/bin/`)
+- our binary distribution won't work on [Alpine Linux](https://alpinelinux.org/) because of `glibc` replacement but [@tomalok](https://github.com/tomalok) is maintaining a [log_proxy Alpine Linux package](https://pkgs.alpinelinux.org/packages?name=log_proxy).
 
 ## How to uninstall?
 

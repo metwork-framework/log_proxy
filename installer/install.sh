@@ -34,7 +34,7 @@ zcat "${ORG}-${REPO}-${RELEASE}.tar.gz" |tar xf -
 mkdir -p "${PREFIX}/bin"
 for F in log_proxy log_proxy_wrapper; do
   cp -f "log_proxy-linux64-${RELEASE}/${F}" "${PREFIX}/bin/"
-  chmod a+rx "${TARGET}/bin/${F}"
+  chmod a+rx "${PREFIX}/bin/${F}"
 done
 rm -f "log_proxy-linux64-${RELEASE}.tar.gz"
 echo "Done"
