@@ -1,3 +1,5 @@
+.PHONY: all clean install test leak coverage release
+
 all:
 	cd src && $(MAKE) all
 
@@ -18,7 +20,4 @@ coverage:
 	cd src && $(MAKE) coverage
 
 release: clean
-	mkdir -p release/lib
-	cd src && $(MAKE) PREFIX=$(shell pwd)/release FORCE_RPATH='@ORIGIN/../lib' install
-	ldd release/bin/log_proxy
-	cp -f `ldd release/bin/log_proxy |grep libglib |awk -F '=> ' '{print $$2;}' |awk '{print $$1;}'` `ldd release/bin/log_proxy |grep libpcre |awk -F '=> ' '{print $$2;}' |awk '{print $$1;}'` release/lib/
+	cd src && $(MAKE) STATIC=1 DESTDIR=$(shell pwd)/release install
