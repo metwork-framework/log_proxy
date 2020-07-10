@@ -20,4 +20,4 @@ coverage:
 	cd src && $(MAKE) coverage
 
 release: clean
-	cd src && $(MAKE) STATIC=1 DESTDIR=$(shell pwd)/release install
+	cd src && $(MAKE) STATIC=yes DESTDIR=$(shell pwd)/release install
