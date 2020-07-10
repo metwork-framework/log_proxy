@@ -51,27 +51,23 @@ To install the binary distribution:
 
 ```
 # As root user (or with sudo)
-# (example with 0.1.0 release, please fix the number to the release you want to install)
-export RELEASE=v0.1.0
-cd /opt
-wget -O log_proxy-linux64-${RELEASE}.tar.gz "https://github.com/metwork-framework/log_proxy/releases/download/${RELEASE}/log_proxy-linux64-${RELEASE}.tar.gz"
-zcat log_proxy-linux64-${RELEASE}.tar.gz |tar xvf -
-ln -s log_proxy-linux64-${RELEASE} log_proxy
-rm -f log_proxy-linux64-${RELEASE}.tar.gz
+bash -c "$(curl -fsSLk https://raw.githubusercontent.com/metwork-framework/log_proxy/master/installer/install.sh)"
 ```
 
-You can now use it with absolute path `/opt/log_proxy/bin/log_proxy` and `opt/log_proxy/bin/log_proxy_wrapper`.
+Notes:
 
-For a more convenient way, configure your `PATH` to prepend the `/opt/log_proxy/bin` path. For example (maybe you would have to adapt this to your specific Linux distribution):
+- if you are very concerned about the security of your system and if you don't want to execute
+a remote `root` script on your system, please review the [very small install script](https://raw.githubusercontent.com/metwork-framework/log_proxy/master/installer/install.sh)
+ (it's just about downloading and installing two statically compiled binaries in `/usr/local/bin/`)
+- our binary distribution won't work on [Alpine Linux](https://alpinelinux.org/) because of `glibc` replacement but [@tomalok](https://github.com/tomalok) is maintaining a [log_proxy Alpine Linux package](https://pkgs.alpinelinux.org/packages?name=log_proxy).
+
+## How to uninstall?
 
 ```
-cat >/etc/profile.d/log_proxy.sh <<EOF
-# Add log_proxy directory to PATH
-export PATH="/opt/log_proxy/bin:${PATH}"
-EOF
+# As root user (or with sudo)
+rm -f /usr/local/bin/log_proxy
+rm -f /usr/local/bin/log_proxy_wrapper
 ```
-
-After a restart of your terminal, you should use `log_proxy` directly by its name.
 
 ## Why this tool?
 
@@ -184,9 +180,12 @@ Then as `root` user or prefixed with `sudo`:
 make install
 ```
 
-This will install `log_proxy` and `log_proxy_wrapper` in /usr/local/bin, by default.
+This will install `log_proxy` and `log_proxy_wrapper` in `/usr/local/bin`, by default.
+￼
+￼`make install` also supports `PREFIX=...` for installing (for example) into a `/usr` directory other than the one in `/usr/local`, and `DESTDIR=...` for installing into `$DESTDIR/$PREFIX/bin` which is useful when making packages.
+￼
+￼
 
-`make install` also supports `PREFIX=...` for installing into a `bin` directory other than the one in `/usr/local`, and `DESTDIR=...` for installing into `$DESTDIR/$PREFIX/bin` which is useful when making packages.
 
 
 
