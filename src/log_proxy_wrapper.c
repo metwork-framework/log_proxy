@@ -12,16 +12,17 @@
 
 static gchar *stdout_path = "NULL";
 static gchar *stderr_path = "STDOUT";
+static gchar *fifo_tmp_dir = NULL; 
 static gchar *command = NULL;
 static gchar **command_args = NULL;
 static GOptionEntry new_entry1 = { "stdout", 'O', 0, G_OPTION_ARG_STRING, &stdout_path, "stdout file path (NULL string (default) can be used to redirect to /dev/null)", NULL };
 static GOptionEntry new_entry2 = { "stderr", 'E', 0, G_OPTION_ARG_STRING, &stderr_path, "stderr file path (STDOUT string (default) can be used to redirect to the same file than stdout)", NULL };
-static GOptionEntry empty_entry;
+static GOptionEntry new_entry3 = { "fifo-tmp-dir", 'F', 0, G_OPTION_ARG_STRING, &fifo_tmp_dir, "directory where to store stdout and stderr (default: content of environment variable TMPDIR if set, /tmp if not)", NULL };
 
 GOptionEntry *change_options()
 {
     int number_of_options = sizeof(entries) / sizeof(entries[0]);
-    // we remove 2 options and we add 2 new
+    // we remove 2 options and we add 3 new
     GOptionEntry *res = g_malloc(sizeof(GOptionEntry) * (number_of_options + 1));
     for (int i = 0 ; i < number_of_options ; i++) {
         if (g_strcmp0(entries[i].long_name, "fifo") == 0) {
@@ -34,14 +35,17 @@ GOptionEntry *change_options()
     }
     res[number_of_options - 2] = new_entry1;
     res[number_of_options - 1] = new_entry2;
-    res[number_of_options] = empty_entry;
+    res[number_of_options] = new_entry3;
     return res;
 }
 
 gchar *make_fifo(const gchar *label) {
-    const gchar *tmpdir = g_getenv("TMPDIR");
-    if (tmpdir == NULL) {
-        tmpdir = "/tmp";
+    const gchar *tmpdir = fifo_tmp_dir;
+    if ( tmpdir ==  NULL ) {
+        tmpdir = g_getenv("TMPDIR");
+        if (tmpdir == NULL) {
+            tmpdir = "/tmp";
+        }
     }
     gchar *uid = get_unique_hexa_identifier();
     gchar *path = g_strdup_printf("%s/log_proxy_%s_%s.fifo", tmpdir, label, uid);
