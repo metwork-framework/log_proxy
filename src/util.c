@@ -145,7 +145,7 @@ gchar *compute_file_path(const gchar *directory, const gchar *file_name) {
 gboolean create_empty(const gchar *file_path) {
     int fd2, close_res;
     while (TRUE) {
-        fd2 = open(file_path, O_CREAT | O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+        fd2 = open(file_path, O_CREAT | O_EXCL, 0600);
         if (fd2 < 0) {
             if (errno == EEXIST) {
                 return TRUE;

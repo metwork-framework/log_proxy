@@ -51,7 +51,7 @@ void test_get_file_inode()
 
 void test_get_fd_inode()
 {
-    int fd = g_open("example_file", O_CREAT);
+    int fd = g_open("example_file", O_CREAT, 0600);
     g_assert(get_fd_inode(fd) > 0);
     close(fd);
     g_remove("example_file");
@@ -134,14 +134,14 @@ void test_lock_unlock_control_file()
     //lock control file
     int fd2 = lock_control_file("log_file");
     g_assert(fd2 >= 0);
-    //run thread trying to get lock 
+    //run thread trying to get lock
     GThread *thread = g_thread_new("thread", (GThreadFunc)thread_lock_control_file, NULL);
     //sleep a while
     sleep(1);
     //unlock control file
     unlock_control_file(fd2);
     //check thread has obtain lock
-    gpointer val = g_thread_join(thread); 
+    gpointer val = g_thread_join(thread);
     g_assert((glong)val > 0);
 }
 #endif

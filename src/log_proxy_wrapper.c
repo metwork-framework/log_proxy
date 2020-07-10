@@ -77,11 +77,11 @@ int main(int argc, char *argv[])
     GOptionEntry *new_entries = change_options();
     g_option_context_add_main_entries(context, new_entries, NULL);
     if (!g_option_context_parse(context, &argc, &argv, NULL)) {
-        g_print(g_option_context_get_help(context, TRUE, NULL));
+        g_print("%s", g_option_context_get_help(context, TRUE, NULL));
         exit(1);
     }
     if (argc < 2) {
-        g_print(g_option_context_get_help(context, TRUE, NULL));
+        g_print("%s", g_option_context_get_help(context, TRUE, NULL));
         exit(1);
     }
     set_default_values_from_env();
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
     int index = 1;
     if (g_strcmp0(argv[index], "--") == 0) {
         if (argc < 3) {
-            g_print(g_option_context_get_help(context, TRUE, NULL));
+            g_print("%s", g_option_context_get_help(context, TRUE, NULL));
             exit(1);
         }
         index++;

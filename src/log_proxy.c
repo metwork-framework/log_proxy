@@ -191,11 +191,11 @@ int main(int argc, char *argv[])
     gchar *description = "Optional environment variables to override defaults: \n    LOGPROXY_ROTATION_SIZE\n    LOGPROXY_ROTATION_TIME\n    LOGPROXY_ROTATION_SUFFIX\n    LOGPROXY_LOG_DIRECTORY\n    LOGPROXY_ROTATED_FILES\n\nExample for rotation-size option:\n- If log_proxy is run with the option --rotation-size on the command line, rotation-size will take the provided value\n- If the option --rotation-size is not provided on command line :\n  - If the environment variable LOGPROXY_ROTATION_SIZE is set, rotation-size will take this value\n  - If the environment variable LOGPROXY_ROTATION_SIZE is not set, rotation-size will take the default value 104857600\n";
     g_option_context_set_description(context, description);
     if (!g_option_context_parse(context, &argc, &argv, NULL)) {
-        g_print(g_option_context_get_help(context, TRUE, NULL));
+        g_print("%s", g_option_context_get_help(context, TRUE, NULL));
         exit(1);
     }
     if (argc < 2) {
-        g_print(g_option_context_get_help(context, TRUE, NULL));
+        g_print("%s", g_option_context_get_help(context, TRUE, NULL));
         exit(1);
     }
     atexit(exit_handler);
