@@ -23,6 +23,10 @@ GITHUB_URL="https://api.github.com/repos/${ORG}/${REPO}/releases/latest"
 echo "Getting latest release on ${GITHUB_URL}..."
 DOWNLOAD_URL=$(curl "${CURL_OPTS}" "${GITHUB_URL}" |grep "browser_download_url.:..https.*tar.gz" |cut -d : -f 2,3 | tr -d \" |tr -d ' ')
 RELEASE=$(echo "${DOWNLOAD_URL}" |sed 's~.*/\(v[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\)/.*$~\1~g')
+if test "${RELEASE}" = ""; then
+    echo "ERROR: can't get the latest release version. Please retry in a few minutes."
+    exit 1
+fi
 echo "=> Found release: ${RELEASE}"
 echo "=> Found download url: ${DOWNLOAD_URL}"
 
