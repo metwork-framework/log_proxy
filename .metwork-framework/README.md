@@ -143,6 +143,7 @@ Application Options:
   -m, --use-locks           use locks to append to main log file (useful if several process writes to the same file)
   -O, --stdout              stdout file path (NULL string (default) can be used to redirect to /dev/null)
   -E, --stderr              stderr file path (STDOUT string (default) can be used to redirect to the same file than stdout)
+  -F, --fifo-tmp-dir        directory where to store stdout and stderr (default: content of environment variable TMPDIR if set, /tmp if not)
 ```
 
 ## How to build?
