@@ -2,29 +2,127 @@
 
 pull_request_rules:
 
-- name: master branch
-  actions:
-    merge:
-      method: merge
-      strict: true
-    delete_head_branch: {}
-  conditions:
-    - base=master
-    - -merged
-    - -closed
-    - label!=Merge Manual
-    - status-success=continuous-integration/drone/pr
-    - '#approved-reviews-by>=1'
-- name: master branch forced
-  actions:
-    merge:
-      method: merge
-      strict: true
-    delete_head_branch: {}
-  conditions:
-    - base=master
-    - -merged
-    - -closed
-    - label!=Merge Manual
-    - label=Merge Now
+  - name: approved merges
+    actions:
+      merge:
+        method: squash
+        strict: true
+        commit_message: title+body
+      delete_head_branch: {}
+    conditions:
 
+      - -merged
+      - -closed
+      - "#approved-reviews-by>=1"
+      - -title~=(WIP|wip)
+      - "label!=Status: Blocked"
+
+      - "label~=^Type: "
+
+
+
+  - name: missing type
+    actions:
+      comment:
+        message: |
+          To (auto) merge this pull-request, just tag this PR with a label:
+
+          - `Type: Enhancement` (new feature)
+          - (or) `Type: Bug` (bugfix)
+          - (or) `Type: Maintenance` (not on the changelog)
+    conditions:
+
+      - -merged
+      - -closed
+      - "#approved-reviews-by>=1"
+      - -title~=(WIP|wip)
+      - "label!=Status: Blocked"
+      - "-label~=^Type: "
+
+  - name: buildbot auto merges
+    actions:
+      label:
+        add: ["Type: Maintenance"]
+        remove: ["Type: Question", "Type: Enhancement", "Type: Bug"]
+      review:
+        type: APPROVE
+        message: "automatic approve because author=metworkbot"
+    conditions:
+
+      - -merged
+      - -closed
+      - author=metworkbot
+      - -title~=(WIP|wip)
+      - "label!=Status: Blocked"
+  - name: mergenow auto merges
+    actions:
+      review:
+        type: APPROVE
+        message: "automatic approve because label=Status: Merge Now"
+    conditions:
+
+      - -merged
+      - -closed
+      - -title~=(WIP|wip)
+      - "label=Status: Merge Now"
+  - name: wip
+    actions:
+      label:
+        add: ["Status: In Progress"]
+        remove: ["Status: Revision Needed", "Status: Pending", "Status: Review Needed", "Status: Accepted", "Status: Blocked", "Status: NotReproduced", "Status: Merged", "Status: Merge Now"]
+    conditions:
+
+      - -merged
+      - -closed
+      - title~=(WIP|wip)
+      - "label!=Status: Blocked"
+  - name: review needed
+    actions:
+      label:
+        add: ["Status: Review Needed"]
+        remove: ["Status: Revision Needed", "Status: Pending", "Status: In Progress", "Status: Accepted", "Status: Blocked", "Status: NotReproduced", "Status: Merged", "Status: Merge Now"]
+    conditions:
+
+      - -merged
+      - -closed
+      - -title~=(WIP|wip)
+      - "label!=Status: Blocked"
+      - "#approved-reviews-by=0"
+  - name: revision needed1
+    actions:
+      label:
+        add: ["Status: Revision Needed"]
+        remove: ["Status: In Progress", "Status: Pending", "Status: Review Needed", "Status: Accepted", "Status: Blocked", "Status: NotReproduced", "Status: Merged", "Status: Merge Now"]
+    conditions:
+
+      - -merged
+      - -closed
+      - "#changes-requested-reviews-by>=1"
+      - "label!=Status: Blocked"
+  - name: revision needed2
+    actions:
+      label:
+        add: ["Status: Revision Needed"]
+        remove: ["Status: In Progress", "Status: Pending", "Status: Review Needed", "Status: Accepted", "Status: Blocked", "Status: NotReproduced", "Status: Merged", "Status: Merge Now"]
+    conditions:
+
+      - -merged
+      - -closed
+      - conflict
+      - "label!=Status: Blocked"
+
+  - name: closed
+    actions:
+      label:
+        add: ["Status: Closed"]
+        remove: ["Status: Revision Needed", "Status: Pending", "Status: Merged", "Status: Review Needed", "Status: Accepted", "Status: Blocked", "Status: In Progress", "Status: NotReproduced", "Status: Merge Now"]
+    conditions:
+      - closed
+      - -merged
+  - name: merged
+    actions:
+      label:
+        add: ["Status: Merged"]
+        remove: ["Status: Revision Needed", "Status: Pending", "Status: Closed", "Status: Review Needed", "Status: Accepted", "Status: Blocked", "Status: In Progress", "Status: NotReproduced", "Status: Merge Now"]
+    conditions:
+      - merged
