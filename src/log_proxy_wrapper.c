@@ -12,12 +12,12 @@
 
 static gchar *stdout_path = "NULL";
 static gchar *stderr_path = "STDOUT";
-static gchar *fifo_tmp_dir = NULL; 
+static gchar *fifo_tmp_dir = NULL;
 static gchar *command = NULL;
 static gchar **command_args = NULL;
 static GOptionEntry new_entry1 = { "stdout", 'O', 0, G_OPTION_ARG_STRING, &stdout_path, "stdout file path (NULL string (default) can be used to redirect to /dev/null)", NULL };
 static GOptionEntry new_entry2 = { "stderr", 'E', 0, G_OPTION_ARG_STRING, &stderr_path, "stderr file path (STDOUT string (default) can be used to redirect to the same file than stdout)", NULL };
-static GOptionEntry new_entry3 = { "fifo-tmp-dir", 'F', 0, G_OPTION_ARG_STRING, &fifo_tmp_dir, "directory where to store stdout and stderr (default: content of environment variable TMPDIR if set, /tmp if not)", NULL };
+static GOptionEntry new_entry3 = { "fifo-tmp-dir", 'F', 0, G_OPTION_ARG_STRING, &fifo_tmp_dir, "directory where to store tmp FIFO for log_proxy (default: content of environment variable TMPDIR if set, /tmp if not)", NULL };
 
 GOptionEntry *change_options()
 {
@@ -112,6 +112,7 @@ int main(int argc, char *argv[])
     command_args[0] = command;
     for (int i = 0 ; i < command_args_length ; i++) {
         command_args[i + 1] = argv[index + i + 1];
+        g_print("%s\n", command_args[i+1]);
     }
     command_args[command_args_length + 1] = NULL;
     gchar *stdout_fifo = g_strdup("/dev/null");
