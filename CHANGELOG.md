@@ -1,6 +1,43 @@
 # CHANGELOG
 
 
+## [Unreleased]
+
+### New Features
+- add fifo-tmp-dir option to log_proxy_wrapper
+
+
+
+
+
+
+## v0.2.3 (2020-07-10)
+
+- No interesting change
+
+
+## v0.2.2 (2020-07-10)
+
+- No interesting change
+
+
+## v0.2.1 (2020-07-10)
+
+- No interesting change
+
+
+## v0.2.0 (2020-07-10)
+
+### New Features
+- add option for static compiling
+- releases are now static builds
+- add install script
+- add install script
+
+
+
+
+
 
 ## v0.1.1 (2020-05-04)
 
