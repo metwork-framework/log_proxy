@@ -1,7 +1,20 @@
 # CHANGELOG
 
 
-## [Unreleased]
+
+## v0.3.1 (2020-07-27)
+
+### New Features
+
+
+### Bug Fixes
+- fix --fifo-tmp-dir documentation
+
+
+
+
+
+## v0.3.0 (2020-07-22)
 
 ### New Features
 - add fifo-tmp-dir option to log_proxy_wrapper
