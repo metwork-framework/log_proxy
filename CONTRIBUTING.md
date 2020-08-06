@@ -1,6 +1,6 @@
 # Contributing guide
 
-[//]: # (automatically generated from https://github.com/metwork-framework/resources/blob/master/cookiecutter/%7B%7Bcookiecutter.repo%7D%7D/CONTRIBUTING.md)
+[//]: # (automatically generated from https://github.com/metwork-framework/github_organization_management/blob/master/common_files/CONTRIBUTING.md)
 
 **WARNING: work in progress**
 
@@ -184,5 +184,4 @@ We have a bot to do some automatic labelling:
 ## Code of Conduct
 
 The MetWork community must follow the Code of Conduct described in [this document](CODE_OF_CONDUCT.md).
-
 

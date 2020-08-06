@@ -1,17 +1,14 @@
 # log_proxy
 
-[//]: # (automatically generated from https://github.com/metwork-framework/resources/blob/master/cookiecutter/_%7B%7Bcookiecutter.repo%7D%7D/README.md)
+[//]: # (automatically generated from https://github.com/metwork-framework/github_organization_management/blob/master/common_files/README.md)
 
 **Status (master branch)**
-
 
 
 
 [![Drone CI](http://metwork-framework.org:8000/api/badges/metwork-framework/log_proxy/status.svg)](http://metwork-framework.org:8000/metwork-framework/log_proxy)
 [![Maintenance](https://github.com/metwork-framework/resources/blob/master/badges/maintained.svg)]()
 
-
-[//]: # (TABLE_OF_CONTENTS_PLACEHOLDER)
 
 
 
@@ -188,11 +185,6 @@ This will install `log_proxy` and `log_proxy_wrapper` in `/usr/local/bin`, by de
 ￼`make install` also supports `PREFIX=...` for installing (for example) into a `/usr` directory other than the one in `/usr/local`, and `DESTDIR=...` for installing into `$DESTDIR/$PREFIX/bin` which is useful when making packages.
 ￼
 ￼
-
-
-
-
-
 
 
 
