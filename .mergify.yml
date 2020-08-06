@@ -85,7 +85,9 @@ pull_request_rules:
       - -closed
       - -title~=(WIP|wip)
       - "label!=Status: Blocked"
+      - "label!=Status: Merge Now"
       - "#approved-reviews-by=0"
+      - "author!=metworkbot"
   - name: revision needed1
     actions:
       label:
