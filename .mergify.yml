@@ -16,7 +16,7 @@ pull_request_rules:
       - "#approved-reviews-by>=1"
       - -title~=(WIP|wip)
       - "label!=Status: Blocked"
-      - "title~=^(build|chore|ci|docs|style|refactor|perf|test|fix|feat|fix|feat|feat!|fix!)(\\([a-z]+\\))?: [\\w ]+$"
+      - "title~=^(build|chore|ci|docs|style|refactor|perf|test|fix|feat|fix|feat|feat!|fix!)(\\([a-z]+\\))?: .*$"
 
   - name: change title
     actions:
@@ -27,7 +27,7 @@ pull_request_rules:
           => you have to change the PR title to match conventional commit specification:
 
           ```
-          regex: ^(build|chore|ci|docs|style|refactor|perf|test|fix|feat|fix|feat|feat!|fix!)(\([a-z]+\))?: [\w ]+$
+          regex: ^(build|chore|ci|docs|style|refactor|perf|test|fix|feat|fix|feat|feat!|fix!)(\([a-z]+\))?: .*$
           ```
 
           As the title will be used for the commit message (and so for changelog entry if `feat:` or `fix:`).
@@ -38,7 +38,7 @@ pull_request_rules:
       - "#approved-reviews-by>=1"
       - -title~=(WIP|wip)
       - "label!=Status: Blocked"
-      - "-title~=^(build|chore|ci|docs|style|refactor|perf|test|fix|feat|fix|feat|feat!|fix!)(\\([a-z]+\\))?: [\\w ]+$"
+      - "-title~=^(build|chore|ci|docs|style|refactor|perf|test|fix|feat|fix|feat|feat!|fix!)(\\([a-z]+\\))?: .*$"
 
   - name: buildbot auto merges
     actions:
