@@ -11,6 +11,7 @@ static glong rotation_size = -1;
 static glong rotation_time = -1;
 static gchar *rotation_suffix = NULL;
 static gchar *log_directory = NULL;
+static gchar *chmod_str = NULL;
 static gint rotated_files = -1;
 static gboolean rm_fifo_at_exit = FALSE;
 static gchar *fifo = NULL;
@@ -86,7 +87,8 @@ static GOptionEntry entries[] = {
     { "rotated-files", 'n', 0, G_OPTION_ARG_INT, &rotated_files, "maximum number of rotated files to keep including main one (0 => no cleaning, default: content of environment variable LOGPROXY_ROTATED_FILES or 5)", NULL },
     { "use-locks", 'm', 0, G_OPTION_ARG_NONE, &use_locks, "use locks to append to main log file (useful if several process writes to the same file)", NULL },
     { "fifo", 'f', 0, G_OPTION_ARG_STRING, &fifo, "if set, read lines on this fifo instead of stdin", NULL },
-    { "rm-fifo-at-exit", 'r', 0, G_OPTION_ARG_NONE, &rm_fifo_at_exit, "if set, drop fifo at then end of the program (you have to use --fifo option of course)", NULL }
+    { "rm-fifo-at-exit", 'r', 0, G_OPTION_ARG_NONE, &rm_fifo_at_exit, "if set, drop fifo at then end of the program (you have to use --fifo option of course)", NULL },
+    { "chmod", 'c', 0, G_OPTION_ARG_STRING, &chmod_str, "if set, chmod the logfile to this octal value (0700 for example)", NULL }
 };
 
 #endif /* OPTIONS_H_ */
