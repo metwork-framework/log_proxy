@@ -109,7 +109,7 @@ static void every_second(int sig) {
             // another program rotated our log file
             // => let's reinit the output channel
             destroy_output_channel();
-            init_output_channel(log_file, use_locks, TRUE, chmod_str);
+            init_output_channel(log_file, use_locks, TRUE, chmod_str, chown_str, chgrp_str);
             unlock_control_file(fd);
             if (sig > 0) {
                 // if sig<0, this is the final call before program end
@@ -144,7 +144,7 @@ static void every_second(int sig) {
             }
             if (rotate_res == TRUE) {
                 destroy_output_channel();
-                init_output_channel(log_file, use_locks, TRUE, chmod_str);
+                init_output_channel(log_file, use_locks, TRUE, chmod_str, chown_str, chgrp_str);
             }
         }
         unlock_control_file(fd);
@@ -170,7 +170,7 @@ void init_or_reinit_output_channel(const gchar *lg_file, gboolean us_locks) {
         exit(2);
     }
     destroy_output_channel();
-    init_output_channel(lg_file, us_locks, FALSE, chmod_str);
+    init_output_channel(lg_file, us_locks, FALSE, chmod_str, chown_str, chgrp_str);
     unlock_control_file(lock_fd);
 }
 

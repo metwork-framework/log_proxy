@@ -3,6 +3,9 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
+#include <grp.h>
 #include "util.h"
 
 static GRand *__rand = NULL;
@@ -172,4 +175,42 @@ gboolean create_empty(const gchar *file_path) {
         }
     }
     return TRUE;
+}
+
+uid_t user_id_from_name(const gchar *name) {
+    struct passwd *pwd;
+    uid_t u;
+    char *endptr;
+    if (name == NULL || *name == '\0') {
+        return -1;
+    }
+    u = strtol(name, &endptr, 10);
+    if (*endptr == '\0') {
+        // allow a numeric string
+        return u;
+    }
+    pwd = getpwnam(name);
+    if (pwd == NULL) {
+        return -1;
+    }
+    return pwd->pw_uid;
+}
+
+gid_t group_id_from_name(const gchar *name) {
+    struct group *grp;
+    gid_t g;
+    char *endptr;
+    if (name == NULL || *name == '\0') {
+        return -1;
+    }
+    g = strtol(name, &endptr, 10);
+    if (*endptr == '\0') {
+        // allow a numeric string
+        return g;
+    }
+    grp = getgrnam(name);
+    if (grp == NULL) {
+        return -1;
+    }
+    return grp->gr_gid;
 }

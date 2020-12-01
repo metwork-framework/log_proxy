@@ -30,7 +30,7 @@ void destroy_output_channel() {
     g_free(_log_file);
 }
 
-void init_output_channel(const gchar *log_file, gboolean use_locks, gboolean force_control_file, const gchar *chmod_str) {
+void init_output_channel(const gchar *log_file, gboolean use_locks, gboolean force_control_file, const gchar *chmod_str, const gchar *chown_str, const gchar *chgrp_str) {
     _log_file = g_strdup(log_file);
     _use_locks = use_locks;
     create_empty(_log_file);
@@ -55,6 +55,17 @@ void init_output_channel(const gchar *log_file, gboolean use_locks, gboolean for
         if (chmod_str != NULL) {
             mode_t chmod_mode_t = strtol(chmod_str, NULL, 8);
             chmod(_log_file, chmod_mode_t);
+        }
+        uid_t uid = -1;
+        gid_t gid = -1;
+        if (chown_str != NULL) {
+            uid = user_id_from_name(chown_str);
+        }
+        if (chgrp_str != NULL) {
+            gid = group_id_from_name(chgrp_str);
+        }
+        if ((uid > 0) || (gid > 0)) {
+            chown(_log_file, uid, gid);
         }
         if (error != NULL) {
             g_warning("error during open output channel: %s => waiting 1s and try again...", error->message);
