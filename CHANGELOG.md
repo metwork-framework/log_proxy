@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## [Unreleased]
+
+### New Features
+- add a chmod/chown/chgrp option (#22)
+
+
+
+
+
 
 ## v0.3.1 (2020-07-27)
 
