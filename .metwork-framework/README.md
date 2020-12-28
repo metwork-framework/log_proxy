@@ -138,8 +138,12 @@ Help Options:
 Application Options:
   -s, --rotation-size       maximum size (in bytes) for a log file before rotation (0 => no maximum, default: content of environment variable LOGPROXY_ROTATION_SIZE or 104857600 (100MB))
   -t, --rotation-time       maximum lifetime (in seconds) for a log file before rotation (0 => no maximum, default: content of environment variable LOGPROXY_ROTATION_TIME or 86400 (24H))
-  -S, --rotation-suffix     strftime based suffix to append to rotated log files (default: content of environment variable LOGPROXY_ROTATION_SUFFIX or .%Y%m%d%H%M%S
+  -S, --rotation-suffix     strftime based suffix to append to rotated log files (default: content of environment variable LOGPROXY_ROTATION_SUFFIX or .%%Y%%m%%d%%H%%M%%S)
+  -d, --log-directory       directory to store log files (default: content of environment variable LOGPROXY_LOG_DIRECTORY or current directory), directory is created if missing
   -n, --rotated-files       maximum number of rotated files to keep including main one (0 => no cleaning, default: content of environment variable LOGPROXY_ROTATED_FILES or 5)
+  -c, --chmod               if set, chmod the logfile to this octal value (0700 for example)
+  -o, --chown               if set, try (if you don't have sufficient privileges, it will fail silently) to change the owner of the logfile to the given user value
+  -g, --chgrp               if set, try (if you don't have sufficient privileges, it will fail silently) to change the group of the logfile to the given group value
   -m, --use-locks           use locks to append to main log file (useful if several process writes to the same file)
   -O, --stdout              stdout file path (NULL string (default) can be used to redirect to /dev/null)
   -E, --stderr              stderr file path (STDOUT string (default) can be used to redirect to the same file than stdout)
