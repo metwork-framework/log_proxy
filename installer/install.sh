@@ -30,8 +30,15 @@ fi
 echo "=> Found release: ${RELEASE}"
 echo "=> Found download url: ${DOWNLOAD_URL}"
 
-cd /opt
-echo "Downloading ${DOWNLOAD_URL}..."
+echo "Removing old releases..."
+rm -Rf /opt/log_proxy-linux64-v* >/dev/null 2>&1
+rm -Rf /opt/log_proxy >/dev/null 2>&1
+rm -Rf /opt/metwork-framework-log_proxy* >/dev/null 2>&1
+rm -f "${PREFIX}/bin/log_proxy" >/dev/null 2>&1
+rm -f "${PREFIX}/bin/log_proxy_wrapper" >/dev/null 2>&1
+
+cd "${TMPDIR:-/tmp}" || exit 1
+echo "Downloading ${DOWNLOAD_URL} into $(pwd)/${ORG}-${REPO}-${RELEASE}.tar.gz..."
 curl "${CURL_OPTS}" "${DOWNLOAD_URL}" >"${ORG}-${REPO}-${RELEASE}.tar.gz"
 echo "Installing..."
 zcat "${ORG}-${REPO}-${RELEASE}.tar.gz" |tar xf -
@@ -40,5 +47,7 @@ for F in log_proxy log_proxy_wrapper; do
   cp -f "log_proxy-linux64-${RELEASE}/${F}" "${PREFIX}/bin/"
   chmod a+rx "${PREFIX}/bin/${F}"
 done
+echo "Cleaning..."
 rm -f "log_proxy-linux64-${RELEASE}.tar.gz"
+rm -Rf "log_proxy-linux64-${RELEASE}"
 echo "Done"
