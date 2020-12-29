@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## v0.4.2 (2020-12-28)
+
+### Bug Fixes
+
+- fix installer cleaning
+
+## v0.4.1 (2020-12-28)
+
+### Bug Fixes
+
+- fix missing options in log_proxy_wrapper (#26)
+
 ## v0.4.0 (2020-12-06)
 
 ### New Features
