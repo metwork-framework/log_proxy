@@ -112,7 +112,6 @@ int main(int argc, char *argv[])
     command_args[0] = command;
     for (int i = 0 ; i < command_args_length ; i++) {
         command_args[i + 1] = argv[index + i + 1];
-        g_print("%s\n", command_args[i+1]);
     }
     command_args[command_args_length + 1] = NULL;
     gchar *stdout_fifo = g_strdup("/dev/null");
