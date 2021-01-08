@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.4.3 (2021-01-07)
+
+- No interesting change
+
 ## v0.4.2 (2020-12-28)
 
 ### Bug Fixes
