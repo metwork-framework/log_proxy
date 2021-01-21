@@ -150,5 +150,5 @@ int main(int argc, char *argv[])
     close(bak_stderr);
     g_critical("can't launch %s command with error: %i [%s]", command, errno, strerror(errno));
     g_option_context_free(context);
-    return 0;
+    return 1;
 }
