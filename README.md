@@ -6,7 +6,7 @@
 
 
 
-[![Drone CI](http://metwork-framework.org:8000/api/badges/metwork-framework/log_proxy/status.svg)](http://metwork-framework.org:8000/metwork-framework/log_proxy)
+[![GitHub CI](https://github.com/metwork-framework/log_proxy/workflows/CI/badge.svg?branch=master)](https://github.com/metwork-framework/log_proxy/actions?query=workflow%3ACI+branch%3Amaster)
 [![Maintenance](https://raw.githubusercontent.com/metwork-framework/resources/master/badges/maintained.svg)](https://github.com/metwork-framework/resources/blob/master/badges/maintained.svg)
 
 
