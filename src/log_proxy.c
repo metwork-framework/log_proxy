@@ -17,12 +17,15 @@
 
 struct sigaction sigact;
 static gboolean first_iteration = TRUE;
+static GMutex *mutex = NULL;
 
 gint _list_compare(gconstpointer a, gconstpointer b) {
     gchar *ca = (gchar *) a;
     gchar *cb = (gchar *) b;
     return g_strcmp0(cb, ca);
 }
+
+#define UNUSED(x) (void)(x)
 
 void clean_too_old_files() {
     gchar *dirpath = g_path_get_dirname(log_file);
@@ -97,7 +100,8 @@ void signal_handler(int signum) {
     }
 }
 
-static void every_second(int sig) {
+
+static void every_second() {
     int fd = lock_control_file(log_file);
     if (fd >= 0) {
         if (first_iteration) {
@@ -111,19 +115,11 @@ static void every_second(int sig) {
             destroy_output_channel();
             init_output_channel(log_file, use_locks, TRUE, chmod_str, chown_str, chgrp_str);
             unlock_control_file(fd);
-            if (sig > 0) {
-                // if sig<0, this is the final call before program end
-                alarm(1);
-            }
             return;
         }
         glong size = get_file_size(log_file);
         if (size < 0) {
             unlock_control_file(fd);
-            if (sig > 0) {
-                // if sig<0, this is the final call before program end
-                alarm(1);
-            }
             return;
         }
         gboolean must_rotate = FALSE;
@@ -149,18 +145,16 @@ static void every_second(int sig) {
         }
         unlock_control_file(fd);
     }
-    if (sig > 0) {
-        // if sig<0, this is the final call before program end
-        alarm(1);
-    }
 }
 
-void init_every_second_signal() {
-    sigact.sa_handler = every_second;
-    sigemptyset(&sigact.sa_mask);
-    sigact.sa_flags = 0;
-    sigaction(SIGALRM, &sigact, (struct sigaction *)NULL);
-    alarm(1);
+gpointer management_thread(gpointer data) {
+    UNUSED(data);
+    while TRUE {
+        sleep(1);
+        g_mutex_lock(mutex);
+        every_second(0);
+        g_mutex_unlock(mutex);
+    }
 }
 
 void init_or_reinit_output_channel(const gchar *lg_file, gboolean us_locks) {
@@ -198,6 +192,8 @@ int main(int argc, char *argv[])
         g_print("%s", g_option_context_get_help(context, TRUE, NULL));
         exit(1);
     }
+    g_thread_init(NULL);
+    mutex = g_mutex_new();
     atexit(exit_handler);
     signal(SIGTERM, signal_handler);
     signal(SIGINT, signal_handler);
@@ -228,30 +224,31 @@ int main(int argc, char *argv[])
     GIOStatus in_status = G_IO_STATUS_NORMAL;
     GString *in_buffer = g_string_new(NULL);
     init_or_reinit_output_channel(log_file, use_locks);
-    init_every_second_signal();
+    GThread* management = g_thread_create(management_thread, NULL, FALSE, NULL);
+    UNUSED(management);
     while ((in_status != G_IO_STATUS_EOF) && (in_status != G_IO_STATUS_ERROR)) {
         in_status = g_io_channel_read_line_string(in, in_buffer, NULL, NULL);
         if (in_status == G_IO_STATUS_NORMAL) {
+            g_mutex_lock(mutex);
             while (TRUE) {
                 gboolean write_status = write_output_channel(in_buffer);
                 if (write_status == FALSE) {
                     g_warning("error during write on: %s", log_file);
-                    alarm(0);  // to avoid a potential deadlock with SIGALARM every_second() calls
                     init_or_reinit_output_channel(log_file, use_locks);
-                    alarm(1);
                     continue;
                 }
                 break;
             }
+            g_mutex_unlock(mutex);
         }
     }
-    alarm(0);  // to avoid a potential deadlock with SIGALARM every_second() calls
-    every_second(-1);
+    every_second();
     destroy_output_channel();
     g_io_channel_shutdown(in, FALSE, NULL);
     g_io_channel_unref(in);
     g_string_free(in_buffer, TRUE);
     g_option_context_free(context);
     g_free(log_file);
+    g_mutex_free(mutex);
     return 0;
 }
