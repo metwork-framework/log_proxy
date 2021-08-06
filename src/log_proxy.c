@@ -220,7 +220,7 @@ int main(int argc, char *argv[])
     init_or_reinit_output_channel(log_file, use_locks);
     GThread* management = g_thread_create(management_thread, NULL, FALSE, NULL);
     UNUSED(management);
-    while ((in_status != G_IO_STATUS_EOF) && (in_status != G_IO_STATUS_ERROR)) {
+    while ((stop_flag == FALSE) && (in_status != G_IO_STATUS_EOF) && (in_status != G_IO_STATUS_ERROR)) {
         in_status = g_io_channel_read_line_string(in, in_buffer, NULL, NULL);
         if (in_status == G_IO_STATUS_NORMAL) {
             g_mutex_lock(mutex);
