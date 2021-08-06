@@ -152,7 +152,7 @@ gpointer management_thread(gpointer data) {
     while TRUE {
         sleep(1);
         g_mutex_lock(mutex);
-        every_second(0);
+        every_second();
         g_mutex_unlock(mutex);
     }
 }
