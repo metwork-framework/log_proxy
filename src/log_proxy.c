@@ -158,7 +158,7 @@ gpointer management_thread(gpointer data) {
         every_second();
         g_mutex_unlock(mutex);
     }
-    g_io_channel_shutdown(in);
+    g_io_channel_shutdown(in, TRUE, NULL);
 }
 
 void init_or_reinit_output_channel(const gchar *lg_file, gboolean us_locks) {
