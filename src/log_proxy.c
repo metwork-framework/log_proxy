@@ -18,6 +18,8 @@
 struct sigaction sigact;
 static gboolean first_iteration = TRUE;
 static GMutex *mutex = NULL;
+static gboolean stop_flag = FALSE;
+static GIOChannel *in = NULL;
 
 gint _list_compare(gconstpointer a, gconstpointer b) {
     gchar *ca = (gchar *) a;
@@ -95,13 +97,14 @@ gboolean rotate() {
 
 void signal_handler(int signum) {
     if ((signum == SIGTERM) || (signum == SIGTERM)) {
-        // nice exit to execute exit_handler
-        exit(0);
+        stop_flag = TRUE;
     }
 }
 
-
 static void every_second() {
+    if (stop_flag == TRUE) {
+        return;
+    }
     int fd = lock_control_file(log_file);
     if (fd >= 0) {
         if (first_iteration) {
@@ -149,12 +152,13 @@ static void every_second() {
 
 gpointer management_thread(gpointer data) {
     UNUSED(data);
-    while TRUE {
+    while (stop_flag == FALSE) {
         sleep(1);
         g_mutex_lock(mutex);
         every_second();
         g_mutex_unlock(mutex);
     }
+    g_io_channel_shutdown(in);
 }
 
 void init_or_reinit_output_channel(const gchar *lg_file, gboolean us_locks) {
@@ -166,14 +170,6 @@ void init_or_reinit_output_channel(const gchar *lg_file, gboolean us_locks) {
     destroy_output_channel();
     init_output_channel(lg_file, us_locks, FALSE, chmod_str, chown_str, chgrp_str);
     unlock_control_file(lock_fd);
-}
-
-void exit_handler() {
-    if (rm_fifo_at_exit == TRUE) {
-        if (fifo != NULL) {
-            g_unlink(fifo);
-        }
-    }
 }
 
 int main(int argc, char *argv[])
@@ -194,7 +190,6 @@ int main(int argc, char *argv[])
     }
     g_thread_init(NULL);
     mutex = g_mutex_new();
-    atexit(exit_handler);
     signal(SIGTERM, signal_handler);
     signal(SIGINT, signal_handler);
     set_default_values_from_env();
@@ -208,7 +203,6 @@ int main(int argc, char *argv[])
         }
     }
     g_free(log_dir);
-    GIOChannel *in = NULL;
     if (fifo == NULL) {
         // We read from stdin
         in = g_io_channel_unix_new(fileno(stdin));
@@ -250,5 +244,10 @@ int main(int argc, char *argv[])
     g_option_context_free(context);
     g_free(log_file);
     g_mutex_free(mutex);
+    if (rm_fifo_at_exit == TRUE) {
+        if (fifo != NULL) {
+            g_unlink(fifo);
+        }
+    }
     return 0;
 }
