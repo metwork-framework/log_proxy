@@ -32,11 +32,11 @@ else
 	DEBUG_CFLAGS=-O2 -Os
 endif
 ifeq ($(shell expr $(GCC_VERSION) \< "8.0.0" ), 1)
-    _CFLAGS=$(CFLAGS) -I. $(shell pkg-config --cflags $(_STATIC_EXTRA_OPT) glib-2.0) -fPIC -Wall -std=c99 -Wextra -pedantic -Wshadow -Wstrict-overflow -Wno-deprecated-declarations -fno-strict-aliasing -DG_LOG_DOMAIN=\"log_proxy\" $(DEBUG_CFLAGS) $(COVERAGE_CFLAGS)
+    _CFLAGS=$(CFLAGS) -I. $(shell pkg-config --cflags $(_STATIC_EXTRA_OPT) glib-2.0 gthread-2.0) -fPIC -Wall -std=c99 -Wextra -pedantic -Wshadow -Wstrict-overflow -Wno-deprecated-declarations -fno-strict-aliasing -DG_LOG_DOMAIN=\"log_proxy\" $(DEBUG_CFLAGS) $(COVERAGE_CFLAGS)
 else
-    _CFLAGS=$(CFLAGS) -I. $(shell pkg-config --cflags $(_STATIC_EXTRA_OPT) glib-2.0) -fPIC -Wall -std=c99 -Wextra -pedantic -Wshadow -Wstrict-overflow -Wno-deprecated-declarations -Wno-cast-function-type -fno-strict-aliasing -DG_LOG_DOMAIN=\"log_proxy\" $(DEBUG_CFLAGS) $(COVERAGE_CFLAGS)
+    _CFLAGS=$(CFLAGS) -I. $(shell pkg-config --cflags $(_STATIC_EXTRA_OPT) glib-2.0 gthread-2.0) -fPIC -Wall -std=c99 -Wextra -pedantic -Wshadow -Wstrict-overflow -Wno-deprecated-declarations -Wno-cast-function-type -fno-strict-aliasing -DG_LOG_DOMAIN=\"log_proxy\" $(DEBUG_CFLAGS) $(COVERAGE_CFLAGS)
 endif
-_LDFLAGS=$(LDFLAGS) -L. $(shell pkg-config --libs $(_STATIC_EXTRA_OPT) glib-2.0) $(shell echo '$(FORCE_RPATH_STR)' |sed 's/@/$$/g' |sed s/~/"'"/g) -lrt
+_LDFLAGS=$(LDFLAGS) -L. $(shell pkg-config --libs $(_STATIC_EXTRA_OPT) glib-2.0 gthread-2.0) $(shell echo '$(FORCE_RPATH_STR)' |sed 's/@/$$/g' |sed s/~/"'"/g) -lrt
 
 OBJECTS=util.o control.o out.o
 BINARIES=log_proxy log_proxy_wrapper
