@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v0.5.0 (2021-08-16)
+
+### Bug Fixes
+
+- potential fix for malloc deadlock in some corner cases (#30)
+
 ## v0.4.4 (2021-01-21)
 
 ### Bug Fixes
