@@ -92,7 +92,8 @@ static GOptionEntry entries[] = {
     { "chgrp", 'g', 0, G_OPTION_ARG_STRING, &chgrp_str, "if set, try (if you don't have sufficient privileges, it will fail silently) to change the group of the logfile to the given group value", NULL },
     { "use-locks", 'm', 0, G_OPTION_ARG_NONE, &use_locks, "use locks to append to main log file (useful if several process writes to the same file)", NULL },
     { "fifo", 'f', 0, G_OPTION_ARG_STRING, &fifo, "if set, read lines on this fifo instead of stdin", NULL },
-    { "rm-fifo-at-exit", 'r', 0, G_OPTION_ARG_NONE, &rm_fifo_at_exit, "if set, drop fifo at then end of the program (you have to use --fifo option of course)", NULL }
+    { "rm-fifo-at-exit", 'r', 0, G_OPTION_ARG_NONE, &rm_fifo_at_exit, "if set, drop fifo at then end of the program (you have to use --fifo option of course)", NULL },
+    { NULL }
 };
 
 #endif /* OPTIONS_H_ */

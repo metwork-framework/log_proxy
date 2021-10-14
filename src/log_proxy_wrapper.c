@@ -24,7 +24,7 @@ GOptionEntry *change_options()
     int number_of_options = sizeof(entries) / sizeof(entries[0]);
     // we remove 2 options and we add 3 new
     GOptionEntry *res = g_malloc(sizeof(GOptionEntry) * (number_of_options + 1));
-    for (int i = 0 ; i < number_of_options ; i++) {
+    for (int i = 0 ; i < number_of_options - 1; i++) {
         if (g_strcmp0(entries[i].long_name, "fifo") == 0) {
             continue;
         }
@@ -33,9 +33,10 @@ GOptionEntry *change_options()
         }
         res[i] = entries[i];
     }
-    res[number_of_options - 2] = new_entry1;
-    res[number_of_options - 1] = new_entry2;
-    res[number_of_options] = new_entry3;
+    res[number_of_options - 3] = new_entry1;
+    res[number_of_options - 2] = new_entry2;
+    res[number_of_options - 1] = new_entry3;
+    res[number_of_options] = entries[number_of_options - 1];
     return res;
 }
 
