@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v0.5.1 (2021-10-14)
+
+### Bug Fixes
+
+- centos8 memory fix (#31)
+
 ## v0.5.0 (2021-08-16)
 
 ### Bug Fixes
