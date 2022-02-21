@@ -125,6 +125,7 @@ Optional environment variables to override defaults :
     LOGPROXY_ROTATION_TIME
     LOGPROXY_ROTATION_SUFFIX
     LOGPROXY_ROTATED_FILES
+    LOGPROXY_CHMOD
 
 Example for rotation-size option :
 - If log_proxy is run with the option --rotation-size on command line, rotation-size will take the provided value
@@ -155,7 +156,7 @@ Application Options:
   -S, --rotation-suffix     strftime based suffix to append to rotated log files (default: content of environment variable LOGPROXY_ROTATION_SUFFIX or .%%Y%%m%%d%%H%%M%%S)
   -d, --log-directory       directory to store log files (default: content of environment variable LOGPROXY_LOG_DIRECTORY or current directory), directory is created if missing
   -n, --rotated-files       maximum number of rotated files to keep including main one (0 => no cleaning, default: content of environment variable LOGPROXY_ROTATED_FILES or 5)
-  -c, --chmod               if set, chmod the logfile to this octal value (0700 for example)
+  -c, --chmod               if set, chmod the logfile to this value, "0700" for example (default : content of environment variable LOGPROXY_CHMOD or NULL)
   -o, --chown               if set, try (if you don't have sufficient privileges, it will fail silently) to change the owner of the logfile to the given user value
   -g, --chgrp               if set, try (if you don't have sufficient privileges, it will fail silently) to change the group of the logfile to the given group value
   -m, --use-locks           use locks to append to main log file (useful if several process writes to the same file)
