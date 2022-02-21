@@ -80,10 +80,10 @@ void set_default_values_from_env()
         }
     }
 
-    if ( chmod ==  NULL ) {
+    if ( chmod_str ==  NULL ) {
         env_val = g_getenv("LOGPROXY_CHMOD");
         if ( env_val != NULL ) {
-            chmod = (gchar *)env_val;
+            chmod_str = (gchar *)env_val;
         }
     }
 }
