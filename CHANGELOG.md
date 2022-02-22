@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## v0.5.2 (2022-02-21)
+
+### New Features
+
+- add optional environment variable LOGPROXY_CHMOD to change logf… (#32)
+- add optional environment variable LOGPROXY_CHMOD to change logf… (#33)
+
 ## v0.5.1 (2021-10-14)
 
 ### Bug Fixes
