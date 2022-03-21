@@ -7,7 +7,11 @@ pull_request_rules:
       merge:
         method: squash
         #strict: true
-        commit_message: title+body
+        #commit_message: title+body
+        commit_message_template: |-
+          {{ title }} (#{{ number }})
+
+          {{ body }}
       delete_head_branch: {}
     conditions:
 
