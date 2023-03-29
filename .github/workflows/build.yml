@@ -22,7 +22,7 @@ jobs:
         name: checkout repository
       # only for push or release
       - name: make docker buildimage
-        uses: elgohr/Publish-Docker-Github-Action@master
+        uses: elgohr/Publish-Docker-Github-Action@v5
         if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'push'
         with:
           username: "${{ secrets.DOCKER_USERNAME }}"
