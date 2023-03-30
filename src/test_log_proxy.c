@@ -121,7 +121,7 @@ void test_blocked_control_file()
 #endif
 
 #if GLIB_CHECK_VERSION(2,32,0)
-void thread_lock_control_file()
+void *thread_lock_control_file()
 {
     glong fd1 = -1;
     fd1 = lock_control_file("log_file");
