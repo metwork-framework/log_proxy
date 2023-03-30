@@ -18,7 +18,7 @@ jobs:
         uses: softprops/turnstyle@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         name: checkout repository
       # only for push or release
       - name: make docker buildimage
@@ -36,14 +36,15 @@ jobs:
     needs: prepare
     steps:
       - name: checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: debug env
         run: env |grep GITHUB
       - name: compute tag name
         id: vars
         run: |
           TMPREF=${GITHUB_REF#refs/*/}
-          if [[ "$TMPREF" == */merge ]]; then echo ::set-output name=tag::`echo pr${TMPREF} |awk -F '/' '{print $1;}'`; else echo ::set-output name=tag::${TMPREF}; fi
+          if [[ "$TMPREF" == */merge ]]; then echo "tag="`echo pr${TMPREF} |awk -F '/' '{print $1;}'`>> ${GITHUB_OUTPUT}; else echo "tag="${TMPREF} >>  ${GITHUB_OUTPUT}; fi
+          #if [[ "$TMPREF" == */merge ]]; then echo ::set-output name=tag::`echo pr${TMPREF} |awk -F '/' '{print $1;}'`; else echo ::set-output name=tag::${TMPREF}; fi
       - name: "Install system deps"
         run: |
           sudo apt-get update
