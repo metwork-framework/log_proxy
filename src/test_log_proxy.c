@@ -129,7 +129,7 @@ void thread_lock_control_file()
     g_thread_exit((gpointer)fd1);
 }
 
-void *test_lock_unlock_control_file()
+void test_lock_unlock_control_file()
 {
     //lock control file
     int fd2 = lock_control_file("log_file");
