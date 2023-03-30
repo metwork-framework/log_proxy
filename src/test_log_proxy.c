@@ -135,7 +135,8 @@ void test_lock_unlock_control_file()
     int fd2 = lock_control_file("log_file");
     g_assert(fd2 >= 0);
     //run thread trying to get lock
-    GThread *thread = g_thread_new("thread", (GThreadFunc)thread_lock_control_file, NULL);
+    //GThread *thread = g_thread_new("thread", (GThreadFunc)thread_lock_control_file, NULL);
+    GThread *thread = g_thread_new("thread", (GThreadFunc)thread_lock_control_file, (void *)NULL);
     //sleep a while
     sleep(1);
     //unlock control file
