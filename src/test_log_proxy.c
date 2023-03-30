@@ -127,7 +127,7 @@ void *thread_lock_control_file(void *pointer)
     fd1 = lock_control_file("log_file");
     g_assert(fd1 >= 0);
     g_thread_exit((gpointer)fd1);
-    return(pointer)
+    return(pointer);
 }
 
 void test_lock_unlock_control_file()
