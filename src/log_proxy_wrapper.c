@@ -64,7 +64,7 @@ void spawn_logproxy_async(const gchar *fifo_path, const gchar *log_path) {
     if (use_locks) {
         use_locks_str = "--use-locks";
     }
-    gchar *cli = g_strdup_printf("log_proxy -s %li -t %li -S \"%s\" -n %i %s -r -f \"%s\" \"%s\"", rotation_size, rotation_time, rotation_suffix, rotated_files, use_locks_str, fifo_path, log_path);
+    gchar *cli = g_strdup_printf("log_proxy -s %li -t %li -S \"%s\" -T \"%s\" -n %i %s -r -f \"%s\" \"%s\"", rotation_size, rotation_time, rotation_suffix, timestamp_prefix, rotated_files, use_locks_str, fifo_path, log_path);
     gboolean spawn_res = g_spawn_command_line_async(cli, NULL);
     if (spawn_res == FALSE) {
         g_critical("can't spawn %s => exit", cli);

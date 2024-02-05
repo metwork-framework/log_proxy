@@ -14,6 +14,7 @@ static GIOChannel *_out_channel = NULL;
 static gboolean _use_locks = FALSE;
 static gchar *_log_file = NULL;
 static glong _log_file_initial_timestamp = 0;
+static gchar *_timestamp_prefix = NULL;
 
 glong get_output_channel_age() {
     g_assert(_log_file_initial_timestamp > 0);
@@ -29,8 +30,9 @@ void destroy_output_channel() {
     g_free(_log_file);
 }
 
-void init_output_channel(const gchar *log_file, gboolean use_locks, gboolean force_control_file, const gchar *chmod_str, const gchar *chown_str, const gchar *chgrp_str) {
+void init_output_channel(const gchar *log_file, gboolean use_locks, gboolean force_control_file, const gchar *chmod_str, const gchar *chown_str, const gchar *chgrp_str, const gchar *timestamp_prefix) {
     _log_file = g_strdup(log_file);
+    _timestamp_prefix = g_strdup(timestamp_prefix);
     _use_locks = use_locks;
     create_empty(_log_file);
     _log_file_initial_timestamp = -1;
@@ -91,6 +93,7 @@ gboolean write_output_channel(GString *buffer) {
     GIOStatus write_status;
     GError *error = NULL;
     gsize written;
+    gsize written_timestamp = 0;
     while (TRUE) {
         if (_use_locks) {
             int res = flock(g_io_channel_unix_get_fd(_out_channel), LOCK_EX);
@@ -98,6 +101,19 @@ gboolean write_output_channel(GString *buffer) {
                 continue;
             }
         }
+
+        if ( _timestamp_prefix != NULL && written_timestamp == 0 ) {
+            gchar *timestamp = compute_timestamp_prefix(_timestamp_prefix);
+            if ( timestamp != NULL ) {
+                write_status = g_io_channel_write_chars(_out_channel, timestamp,
+                        strlen(timestamp), &written_timestamp, &error);
+                g_free(timestamp);
+                if (write_status == G_IO_STATUS_AGAIN) {
+                    continue;
+                }
+            }
+        }
+
         write_status = g_io_channel_write_chars(_out_channel, buffer->str,
                 buffer->len, &written, &error);
         if (_use_locks) {
