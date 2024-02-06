@@ -14,12 +14,12 @@ jobs:
     env:
       BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         # Disabling shallow clone is recommended for improving relevancy of reporting
         fetch-depth: 0
     - name: Install sonar-scanner and build-wrapper
-      uses: sonarsource/sonarcloud-github-c-cpp@v1.3.2
+      uses: sonarsource/sonarcloud-github-c-cpp@v2.0.2
     - name: Run build-wrapper
       run: |
         gcc --version
