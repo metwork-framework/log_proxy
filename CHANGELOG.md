@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [Unreleased]
+
+### Bug Fixes
+
+- pass -d/--log-directory command-line option from wrapper to logger process
+
 ## v0.5.2 (2022-02-21)
 
 ### New Features
