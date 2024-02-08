@@ -1,6 +1,5 @@
 #include <glib.h>
 #include <glib/gstdio.h>
-#include <glib/gi18n.h>
 #include <fcntl.h>
 #include <locale.h>
 #include <string.h>

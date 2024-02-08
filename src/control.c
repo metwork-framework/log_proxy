@@ -1,5 +1,4 @@
 #include <glib.h>
-#include <glib/gstdio.h>
 #include <fcntl.h>
 #include <sys/file.h>
 #include <unistd.h>

@@ -1,8 +1,7 @@
 #include <glib.h>
-#include <glib/gprintf.h>
-#include <glib/gstdio.h>
 #include <locale.h>
 #include <sys/file.h>
+#include <sys/stat.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
