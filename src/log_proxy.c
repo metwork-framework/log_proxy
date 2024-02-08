@@ -228,7 +228,6 @@ int main(int argc, char *argv[])
     signal(SIGTERM, signal_handler);
     signal(SIGINT, signal_handler);
     set_default_values_from_env();
-    if ( strcmp( timestamp_prefix, "(null)" ) == 0 ) timestamp_prefix = NULL;
     log_file = compute_file_path(log_directory, argv[1]);
     // Create log directory if not existing
     gchar *log_dir = g_path_get_dirname(log_file);

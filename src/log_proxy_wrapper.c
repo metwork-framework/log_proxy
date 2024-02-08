@@ -1,6 +1,4 @@
 #include <glib.h>
-#include <glib/gstdio.h>
-#include <glib/gprintf.h>
 #include <locale.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -60,17 +58,40 @@ gchar *make_fifo(const gchar *label) {
 }
 
 void spawn_logproxy_async(const gchar *fifo_path, const gchar *log_path) {
-    gchar *use_locks_str = "";
+    gchar *rotation_size_str = g_strdup_printf("%li", rotation_size);
+    gchar *rotation_time_str = g_strdup_printf("%li", rotation_time);
+    gchar *rotated_files_str = g_strdup_printf("%i", rotated_files);
+    gchar *argv[20] = {
+        "log_proxy",
+        "-s", rotation_size_str,
+        "-t", rotation_time_str,
+        "-S", rotation_suffix,
+        "-d", log_directory,
+        "-n", rotated_files_str,
+        "-r", "-f", (gchar*) fifo_path
+    };
+    int argc = 14; // initial number of fixed arguments above
+
     if (use_locks) {
-        use_locks_str = "--use-locks";
+        argv[argc++] = "--use-locks";
     }
-    gchar *cli = g_strdup_printf("log_proxy -s %li -t %li -S \"%s\" -d \"%s\" -T \"%s\" -n %i %s -r -f \"%s\" \"%s\"", rotation_size, rotation_time, rotation_suffix, log_directory, timestamp_prefix, rotated_files, use_locks_str, fifo_path, log_path);
-    gboolean spawn_res = g_spawn_command_line_async(cli, NULL);
+    if (timestamp_prefix != NULL) {
+        argv[argc++] = "-T";
+        argv[argc++] = timestamp_prefix;
+    }
+    argv[argc++] = (gchar*) log_path;
+    argv[argc] = NULL;
+
+    gboolean spawn_res = g_spawn_async(
+        NULL, argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, NULL );
     if (spawn_res == FALSE) {
-        g_critical("can't spawn %s => exit", cli);
+        g_critical("can't spawn [ %s ] => exit", g_strjoinv(" ", argv));
         exit(1);
     }
-    g_free(cli);
+
+    g_free(rotation_size_str);
+    g_free(rotation_time_str);
+    g_free(rotated_files_str);
 }
 
 int main(int argc, char *argv[])
