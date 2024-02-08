@@ -97,7 +97,7 @@ gboolean rotate() {
 }
 
 void signal_handler(int signum) {
-    if ((signum == SIGTERM) || (signum == SIGTERM)) {
+    if ((signum == SIGINT) || (signum == SIGTERM)) {
         stop_signal = TRUE;
     }
 }
