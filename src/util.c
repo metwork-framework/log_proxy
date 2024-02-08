@@ -116,6 +116,26 @@ gchar *compute_strftime_suffix(const gchar *str, const gchar *strftime_suffix) {
 }
 
 /**
+ * Format current timestamp prefix to prepend to a log line.
+ *
+ * @param strftime_prefix format with strftime placeholders to expand with current time.
+ * @return newly allocated string (free it with g_free) with the current timestamp prefix.
+ */
+gchar *compute_timestamp_prefix(const gchar *strftime_prefix) {
+    time_t t;
+    struct tm *tmp;
+    t = time(NULL);
+    tmp = localtime(&t);
+    g_assert(tmp != NULL);
+    char outstr[100];
+    if (strftime(outstr, sizeof(outstr), strftime_prefix, tmp) == 0) {
+        g_critical("problem with strftime on %s", strftime_prefix);
+        return NULL;
+    }
+    return g_strdup(outstr);
+}
+
+/**
  * Compute absolute file path from directory path and file name
  *
  * @param directory absolute or relative directory path

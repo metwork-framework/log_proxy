@@ -10,6 +10,7 @@ static gchar *log_file = NULL;
 static glong rotation_size = -1;
 static glong rotation_time = -1;
 static gchar *rotation_suffix = NULL;
+static gchar *timestamp_prefix = NULL;
 static gchar *log_directory = NULL;
 static gchar *chmod_str = NULL;
 static gchar *chown_str = NULL;
@@ -70,6 +71,16 @@ void set_default_values_from_env()
         }
     }
 
+    if ( timestamp_prefix ==  NULL ) {
+        env_val = g_getenv("LOGPROXY_TIMESTAMPS");
+        if ( env_val != NULL ) {
+            timestamp_prefix = (gchar *)env_val;
+        }
+    }
+    if ( timestamp_prefix !=  NULL && strlen(timestamp_prefix) == 0 ) {
+        timestamp_prefix = NULL;
+    }
+
     if ( log_directory ==  NULL ) {
         env_val = g_getenv("LOGPROXY_LOG_DIRECTORY");
         if ( env_val != NULL ) {
@@ -94,6 +105,7 @@ static GOptionEntry entries[] = {
     { "rotation-suffix", 'S', 0, G_OPTION_ARG_STRING, &rotation_suffix, "strftime based suffix to append to rotated log files (default: content of environment variable LOGPROXY_ROTATION_SUFFIX or .%%Y%%m%%d%%H%%M%%S)", NULL },
     { "log-directory", 'd', 0, G_OPTION_ARG_STRING, &log_directory, "directory to store log files (default: content of environment variable LOGPROXY_LOG_DIRECTORY or current directory), directory is created if missing", NULL },
     { "rotated-files", 'n', 0, G_OPTION_ARG_INT, &rotated_files, "maximum number of rotated files to keep including main one (0 => no cleaning, default: content of environment variable LOGPROXY_ROTATED_FILES or 5)", NULL },
+    { "timestamps", 'T', 0, G_OPTION_ARG_STRING, &timestamp_prefix, "strftime prefix to prepend to every output line (default: content of environment variable LOGPROXY_TIMESTAMPS or none)", NULL },
     { "chmod", 'c', 0, G_OPTION_ARG_STRING, &chmod_str, "if set, chmod the logfile to this value, '0700' for example (default: content of environment variable LOGPROXY_CHMOD or NULL)", NULL },
     { "chown", 'o', 0, G_OPTION_ARG_STRING, &chown_str, "if set, try (if you don't have sufficient privileges, it will fail silently) to change the owner of the logfile to the given user value", NULL },
     { "chgrp", 'g', 0, G_OPTION_ARG_STRING, &chgrp_str, "if set, try (if you don't have sufficient privileges, it will fail silently) to change the group of the logfile to the given group value", NULL },

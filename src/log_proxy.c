@@ -114,7 +114,7 @@ static void every_second() {
             // another program rotated our log file
             // => let's reinit the output channel
             destroy_output_channel();
-            init_output_channel(log_file, use_locks, TRUE, chmod_str, chown_str, chgrp_str);
+            init_output_channel(log_file, use_locks, TRUE, chmod_str, chown_str, chgrp_str, timestamp_prefix);
             unlock_control_file(fd);
             return;
         }
@@ -141,7 +141,7 @@ static void every_second() {
             }
             if (rotate_res == TRUE) {
                 destroy_output_channel();
-                init_output_channel(log_file, use_locks, TRUE, chmod_str, chown_str, chgrp_str);
+                init_output_channel(log_file, use_locks, TRUE, chmod_str, chown_str, chgrp_str, timestamp_prefix);
             }
         }
         unlock_control_file(fd);
@@ -202,7 +202,7 @@ void init_or_reinit_output_channel(const gchar *lg_file, gboolean us_locks) {
         exit(2);
     }
     destroy_output_channel();
-    init_output_channel(lg_file, us_locks, FALSE, chmod_str, chown_str, chgrp_str);
+    init_output_channel(lg_file, us_locks, FALSE, chmod_str, chown_str, chgrp_str, timestamp_prefix);
     unlock_control_file(lock_fd);
 }
 
@@ -212,7 +212,7 @@ int main(int argc, char *argv[])
     setlocale(LC_ALL, "");
     context = g_option_context_new("LOGFILE  - log proxy");
     g_option_context_add_main_entries(context, entries, NULL);
-    gchar *description = "Optional environment variables to override defaults: \n    LOGPROXY_ROTATION_SIZE\n    LOGPROXY_ROTATION_TIME\n    LOGPROXY_ROTATION_SUFFIX\n    LOGPROXY_LOG_DIRECTORY\n    LOGPROXY_ROTATED_FILES\n\nExample for rotation-size option:\n- If log_proxy is run with the option --rotation-size on the command line, rotation-size will take the provided value\n- If the option --rotation-size is not provided on command line :\n  - If the environment variable LOGPROXY_ROTATION_SIZE is set, rotation-size will take this value\n  - If the environment variable LOGPROXY_ROTATION_SIZE is not set, rotation-size will take the default value 104857600\n";
+    gchar *description = "Optional environment variables to override defaults: \n    LOGPROXY_ROTATION_SIZE\n    LOGPROXY_ROTATION_TIME\n    LOGPROXY_ROTATION_SUFFIX\n    LOGPROXY_LOG_DIRECTORY\n    LOGPROXY_ROTATED_FILES\n    LOGPROXY_TIMESTAMPS\n\nExample for rotation-size option:\n- If log_proxy is run with the option --rotation-size on the command line, rotation-size will take the provided value\n- If the option --rotation-size is not provided on command line :\n  - If the environment variable LOGPROXY_ROTATION_SIZE is set, rotation-size will take this value\n  - If the environment variable LOGPROXY_ROTATION_SIZE is not set, rotation-size will take the default value 104857600\n";
     g_option_context_set_description(context, description);
     if (!g_option_context_parse(context, &argc, &argv, NULL)) {
         g_print("%s", g_option_context_get_help(context, TRUE, NULL));
