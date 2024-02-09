@@ -21,7 +21,7 @@ It can be used to avoid loosing some logs if you use `logrotate` with `copytrunc
 ## Features
 
 - [x] usable as a pipe (`myapp myapp_arg1 myapp_arg2 |log_proxy /log/myapp.log`)
-- [x] configurable log rotation suffix with `stftime` placeholders (for example: `.%Y%m%d%H%M%S`)
+- [x] configurable log rotation suffix with `strftime` placeholders (for example: `.%Y%m%d%H%M%S`)
 - [x] can limit the number of rotated files (and delete oldest)
 - [x] can rotate files depending on their size (in bytes)
 - [x] can rotate files depending on their age (in seconds)
@@ -29,7 +29,7 @@ It can be used to avoid loosing some logs if you use `logrotate` with `copytrunc
 - [x] several instances of the same app can log to the same file without issue (example: `myapp arg1 |log_proxy --use-locks /log/myapp.log` and `myapp arg2 |log_proxy --use-locks /log/myapp.log` can run at the same time)
 - [ ] configurable action (a command to execute) to run after each log rotation
 - [ ] rock solid (it's perfectly stable in our use case but we are waiting for other success stories to check this feature)
-- [ ] option to add a timestamp before each log line
+- [x] option to add a timestamp before each log line, thanks to [mk-fg](https://github.com/mk-fg)
 - [x] really fast
 - [x] do not eat a lot of memory
 - [x] configurable with CLI options as well with env variables
