@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## [Unreleased]
+## v0.7.1 (2024-02-09)
 
 ### Bug Fixes
 
