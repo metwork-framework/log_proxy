@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 
+### Bug Fixes
+
+- print more descriptive error for strftime() failure on timestamp-prefix (#41)
+
+## v0.7.0 (2024-02-09)
+
+### Bug Fixes
+
+- build log_proxy command in wrapper as an argv array, don't use gshell parser
+- cleanup glib includes, add some missing libc ones
+
+## v0.6.0 (2024-02-09)
+
 ### New Features
 
 - add -T/--timestamps (env LOGPROXY_TIMESTAMPS) option to prepend strftime to each line
