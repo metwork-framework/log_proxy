@@ -96,9 +96,13 @@ gboolean write_output_channel(GString *buffer) {
     if ( _timestamp_prefix != NULL ) {
         GDateTime *dt = g_date_time_new_now_local();
         gchar *prefix = g_date_time_format(dt, _timestamp_prefix);
-        g_string_prepend(buffer, prefix);
-        g_free(prefix);
         g_date_time_unref(dt);
+        if ( prefix != NULL ) {
+            g_string_prepend(buffer, prefix);
+            g_free(prefix);
+        } else {
+            g_critical("strftime failed for timestamp-prefix: %s", _timestamp_prefix);
+        }
     }
 
     while (TRUE) {
