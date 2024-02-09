@@ -2,9 +2,14 @@
 
 ## [Unreleased]
 
+### New Features
+
+- add -T/--timestamps (env LOGPROXY_TIMESTAMPS) option to prepend strftime to each line
+
 ### Bug Fixes
 
 - pass -d/--log-directory command-line option from wrapper to logger process
+- fix signal_handler for SIGINT
 
 ## v0.5.2 (2022-02-21)
 
