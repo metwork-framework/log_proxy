@@ -61,7 +61,7 @@ void spawn_logproxy_async(const gchar *fifo_path, const gchar *log_path) {
     gchar *rotation_size_str = g_strdup_printf("%li", rotation_size);
     gchar *rotation_time_str = g_strdup_printf("%li", rotation_time);
     gchar *rotated_files_str = g_strdup_printf("%i", rotated_files);
-    gchar *argv[20] = {
+    gchar *argv[25] = {
         "log_proxy",
         "-s", rotation_size_str,
         "-t", rotation_time_str,
@@ -78,6 +78,18 @@ void spawn_logproxy_async(const gchar *fifo_path, const gchar *log_path) {
     if (timestamp_prefix != NULL) {
         argv[argc++] = "-T";
         argv[argc++] = timestamp_prefix;
+    }
+    if (chmod_str != NULL) {
+        argv[argc++] = "-c";
+        argv[argc++] = chmod_str;
+    }
+    if (chown_str != NULL) {
+        argv[argc++] = "-o";
+        argv[argc++] = chown_str;
+    }
+    if (chgrp_str != NULL) {
+        argv[argc++] = "-g";
+        argv[argc++] = chgrp_str;
     }
     argv[argc++] = (gchar*) log_path;
     argv[argc] = NULL;
