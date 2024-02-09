@@ -4,6 +4,7 @@
 #include <glib.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <sys/resource.h>
 
 static gchar *log_file = NULL;
