@@ -93,24 +93,20 @@ gboolean write_output_channel(GString *buffer) {
     GIOStatus write_status;
     GError *error = NULL;
     gsize written;
-    gsize written_timestamp = 0;
+
+    if ( _timestamp_prefix != NULL ) {
+        GDateTime *dt = g_date_time_new_now_local();
+        gchar *prefix = g_date_time_format(dt, _timestamp_prefix);
+        g_string_prepend(buffer, prefix);
+        g_free(prefix);
+        g_date_time_unref(dt);
+    }
+
     while (TRUE) {
         if (_use_locks) {
             int res = flock(g_io_channel_unix_get_fd(_out_channel), LOCK_EX);
             if (res < 0) {
                 continue;
-            }
-        }
-
-        if ( _timestamp_prefix != NULL && written_timestamp == 0 ) {
-            gchar *timestamp = compute_timestamp_prefix(_timestamp_prefix);
-            if ( timestamp != NULL ) {
-                write_status = g_io_channel_write_chars(_out_channel, timestamp,
-                        strlen(timestamp), &written_timestamp, &error);
-                g_free(timestamp);
-                if (write_status == G_IO_STATUS_AGAIN) {
-                    continue;
-                }
             }
         }
 
