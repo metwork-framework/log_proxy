@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v0.7.2 (2024-02-09)
+
+### Bug Fixes
+
+- pass missing options -c, -o and -g from wrapper to logger process
+
 ## v0.7.1 (2024-02-09)
 
 ### Bug Fixes
