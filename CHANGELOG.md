@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v0.7.3 (2024-02-12)
+
+### Bug Fixes
+
+- add more examples and correct some confusing wording in cli options' descriptions (#43)
+
 ## v0.7.2 (2024-02-09)
 
 ### Bug Fixes
