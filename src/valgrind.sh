@@ -32,7 +32,7 @@ else
 fi
 
 echo "TEST DES FUITES MEMOIRES..."
-valgrind -s --tool=memcheck --leak-check=full --show-leak-kinds=all --show-possibly-lost=no ${SUPPS} "$@" 2>&1 |tee /tmp/valgrind.out
+valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --show-possibly-lost=no ${SUPPS} "$@" 2>&1 |tee /tmp/valgrind.out
 N=$(cat /tmp/valgrind.out |grep -c "definitely lost: 0 bytes in 0 blocks")
 if test "${N}" -gt 0; then
   echo "OK"
