@@ -263,7 +263,7 @@ int main(int argc, char *argv[])
                 if (write_status == FALSE) {
                     g_warning("error during write on: %s", log_file);
                     init_or_reinit_output_channel(log_file, use_locks);
-                    continue;
+                    break;
                 }
                 break;
             }
