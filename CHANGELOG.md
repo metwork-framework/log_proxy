@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v0.7.4 (2024-11-05)
+
+### Bug Fixes
+
+- break out in case of write problem (fix #44)
+
 ## v0.7.3 (2024-02-12)
 
 ### Bug Fixes
