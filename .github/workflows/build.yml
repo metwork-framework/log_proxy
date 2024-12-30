@@ -15,7 +15,7 @@ jobs:
       # we block concurrent executions because of concurrency issues
       # on docker build image
       - name: 'Block Concurrent Executions'
-        uses: softprops/turnstyle@master
+        uses: softprops/turnstyle@v2.3.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/checkout@v4
