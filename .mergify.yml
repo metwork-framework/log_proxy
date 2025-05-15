@@ -1,7 +1,8 @@
 # automatically generated from https://github.com/metwork-framework/github_organization_management/blob/master/common_files/mergify.yml)
 
 pull_request_rules:
-- name: approved merges
+
+  - name: approved merges
     actions:
       merge:
         method: squash
@@ -11,14 +12,16 @@ pull_request_rules:
           {{ body }}
       delete_head_branch: {}
     conditions:
-- -merged
+
+      - -merged
       - -closed
       - "#approved-reviews-by>=1"
       - -title~=(WIP|wip)
       - "label!=Status: Blocked"
       - "title~=^(build|chore|ci|docs|style|refactor|perf|test|fix|fea\
         t|fix|feat|feat!|fix!)(\\([a-z]+\\))?: .*$"
-- name: change title
+
+  - name: change title
     actions:
       comment:
         message: |
@@ -32,20 +35,23 @@ pull_request_rules:
 
           As the title will be used for the commit message (and so for changelog entry if `feat:` or `fix:`).
     conditions:
-- -merged
+
+      - -merged
       - -closed
       - "#approved-reviews-by>=1"
       - -title~=(WIP|wip)
       - "label!=Status: Blocked"
       - "-title~=^(build|chore|ci|docs|style|refactor|perf|test|fix|fe\
         at|fix|feat|feat!|fix!)(\\([a-z]+\\))?: .*$"
-- name: buildbot auto merges
+
+  - name: buildbot auto merges
     actions:
       review:
         type: APPROVE
         message: automatic approve because author=metworkbot
     conditions:
-- -merged
+
+      - -merged
       - -closed
       - author=metworkbot
       - -title~=(WIP|wip)
@@ -56,7 +62,8 @@ pull_request_rules:
         type: APPROVE
         message: "automatic approve because label=Status: Merge Now"
     conditions:
-- -merged
+
+      - -merged
       - -closed
       - -title~=(WIP|wip)
       - "label=Status: Merge Now"
@@ -75,7 +82,8 @@ pull_request_rules:
           - "Status: Merged"
           - "Status: Merge Now"
     conditions:
-- -merged
+
+      - -merged
       - -closed
       - title~=(WIP|wip)
       - "label!=Status: Blocked"
@@ -94,7 +102,8 @@ pull_request_rules:
           - "Status: Merged"
           - "Status: Merge Now"
     conditions:
-- -merged
+
+      - -merged
       - -closed
       - -title~=(WIP|wip)
       - "label!=Status: Blocked"
@@ -116,7 +125,8 @@ pull_request_rules:
           - "Status: Merged"
           - "Status: Merge Now"
     conditions:
-- -merged
+
+      - -merged
       - -closed
       - "#changes-requested-reviews-by>=1"
       - "label!=Status: Blocked"
@@ -135,11 +145,13 @@ pull_request_rules:
           - "Status: Merged"
           - "Status: Merge Now"
     conditions:
-- -merged
+
+      - -merged
       - -closed
       - conflict
       - "label!=Status: Blocked"
-- name: closed
+
+  - name: closed
     actions:
       label:
         add:
