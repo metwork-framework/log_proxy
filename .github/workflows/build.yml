@@ -49,10 +49,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt -y install valgrind
-          sudo apt -y install libglib2.0-dev << EOF
-8
-37
-EOF
+          sudo echo "8 37" | xargs apt -y install libglib2.0-dev << EOF
       - name: "Basic build and test"
         run: |
           make DEBUG=yes
