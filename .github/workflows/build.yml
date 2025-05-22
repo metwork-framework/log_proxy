@@ -9,7 +9,7 @@ on:
 
 jobs:
   prepare:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 10
     steps:
       # we block concurrent executions because of concurrency issues
@@ -32,7 +32,7 @@ jobs:
           cache: true
           tags: "temporary"
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: prepare
     steps:
       - name: checkout repository
@@ -49,7 +49,6 @@ jobs:
         run: |
           sudo apt update
           sudo apt -y install valgrind
-          sudo echo "8 37" | xargs apt -y install libglib2.0-dev
       - name: "Basic build and test"
         run: |
           make DEBUG=yes
