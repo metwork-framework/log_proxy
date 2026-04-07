@@ -10,7 +10,6 @@ pull_request_rules:
           {{ title }} (#{{ number }})
 
           {{ body }}
-      delete_head_branch: {}
     conditions:
 
       - -merged
@@ -18,8 +17,7 @@ pull_request_rules:
       - "#approved-reviews-by>=1"
       - -title~=(WIP|wip)
       - "label!=Status: Blocked"
-      - "title~=^(build|chore|ci|docs|style|refactor|perf|test|fix|fea\
-        t|fix|feat|feat!|fix!)(\\([a-z]+\\))?: .*$"
+      - "title~=^(build|chore|ci|docs|style|refactor|perf|test|fix|feat|fix|feat|feat!|fix!)(\\([a-z]+\\))?: .*$"
 
   - name: change title
     actions:
@@ -41,8 +39,7 @@ pull_request_rules:
       - "#approved-reviews-by>=1"
       - -title~=(WIP|wip)
       - "label!=Status: Blocked"
-      - "-title~=^(build|chore|ci|docs|style|refactor|perf|test|fix|fe\
-        at|fix|feat|feat!|fix!)(\\([a-z]+\\))?: .*$"
+      - "-title~=^(build|chore|ci|docs|style|refactor|perf|test|fix|feat|fix|feat|feat!|fix!)(\\([a-z]+\\))?: .*$"
 
   - name: buildbot auto merges
     actions:
