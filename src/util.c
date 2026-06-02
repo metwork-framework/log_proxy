@@ -44,7 +44,7 @@ gchar *get_unique_hexa_identifier()
     int i;
     for (i = 0 ; i < 4 ; i++) {
         ri = g_rand_int(rnd);
-        sprintf(res + (i * 8) * sizeof(gchar),  "%08x", ri);
+        snprintf(res + (i * 8) * sizeof(gchar), 9, "%08x", ri);
     }
     return res;
 }
