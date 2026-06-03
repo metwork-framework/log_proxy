@@ -18,7 +18,6 @@ pull_request_rules:
       - -title~=(WIP|wip)
       - "label!=Status: Blocked"
       - "title~=^(build|chore|ci|docs|style|refactor|perf|test|fix|feat|feat!|fix!)(\\([a-z]+\\))?: .*$"
-
   - name: change title
     actions:
       comment:
@@ -40,7 +39,6 @@ pull_request_rules:
       - -title~=(WIP|wip)
       - "label!=Status: Blocked"
       - "-title~=^(build|chore|ci|docs|style|refactor|perf|test|fix|feat|feat!|fix!)(\\([a-z]+\\))?: .*$"
-
   - name: buildbot auto merges
     actions:
       review:
